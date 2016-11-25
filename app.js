@@ -11,9 +11,9 @@ app.use(express.static('public'));
 //Handle all get requests from clients.
 //send the html file
 
-app.get('/', function(req, res){
-	res.sendFile(__dirname + '/public/views/index.html');
-	
+app.get('*', function(req, res){
+	var file = req.params[0];
+	res.sendFile(__dirname + '/public/views/' + file);	
 });
 
 //Set up server to listen to port 2000

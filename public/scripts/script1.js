@@ -1,1 +1,4 @@
-//sup lucas and master jakob
+//Create variable socket
+var socket = io();
+alert("lol");
+

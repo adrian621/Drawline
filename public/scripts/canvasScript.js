@@ -17,10 +17,15 @@ var dot_flag = false;
 var coordinates = [];
 var rect = canvas.getBoundingClientRect()
 
+var size = document.getElementById('size');
+var color = document.getElementById('color');
+
+
+
 function findMove(res, e) {
 	if(res == 'down') {
-		//Set old mouse coordinates to "new" previous coordinates
 
+		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
 		prevCordY = newCordY;
 		//Current relative mouse coordinates
@@ -71,12 +76,14 @@ function findMove(res, e) {
 }
 
 function draw() {
+	var sizeVal = size.options[size.selectedIndex].value;
+	var colorVal = color.options[color.selectedIndex].value;
 
 	ctx.beginPath();
 	ctx.moveTo(prevCordX, prevCordY);
 	ctx.lineTo(newCordX, newCordY);
-	ctx.strokeStyle = "black";
-	ctx.lineWidth = 2;
+	ctx.strokeStyle = colorVal;
+	ctx.lineWidth = sizeVal;
 	ctx.stroke();
 	ctx.closePath();
 }

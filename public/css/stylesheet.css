@@ -1,1 +1,7 @@
-##
+#canvas{border:6px solid pink; display:block;margin:auto;}
+#buttons{text-align:center;}
+#controlDiv{text-align:center;}
+#sizeDiv{display:inline-block;}
+#colorDiv{display:inline-block;}
+#size{margin:auto}
+#bb{display:inline-block;}

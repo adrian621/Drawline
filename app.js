@@ -5,15 +5,15 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
 
-//specifie folder to use for static pagaes such as css scripts
+//specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
-//Handele all get requests from clients.
+//Handle all get requests from clients.
 //send the html file
 
-app.get('/', function(req, res){
-	res.sendFile(__dirname + '/public/views/index.html');
-	
+app.get('*', function(req, res){
+	var file = req.params[0];
+	res.sendFile(__dirname + '/public/views/' + file);	
 });
 
 //Set up server to listen to port 2000

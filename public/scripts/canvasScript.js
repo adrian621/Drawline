@@ -14,19 +14,27 @@ var prevCordY = 0;
 var newCordX = 0;
 var newCordY = 0;
 var dot_flag = false;
-	
+var coordinates = [];
+var rect = canvas.getBoundingClientRect()
+
 function findMove(res, e) {
 	if(res == 'down') {
 		//Set old mouse coordinates to "new" previous coordinates
+
 		prevCordX = newCordX;
 		prevCordY = newCordY;
-		//Current mouse coordinates.
-		newCordX = e.clientX;
-		newCordY = e.clientY;
-		
+		//Current relative mouse coordinates
+		newCordX = e.clientX - rect.left;
+		newCordY = e.clientY - rect.top;
+
+		//Save mouse coordinates to send to server
+		coord_tuple = [newCordX, newCordY];
+		coordinates.push(coord_tuple);
+
 		flag = true;
 		dot_flag = true;
-			
+
+
 		if(dot_flag) {
 			ctx.beginPath();
 			ctx.fillStyle = "black";
@@ -37,22 +45,33 @@ function findMove(res, e) {
 	}
 
 	if(res == 'up') {
+		//Send coordinates to server when user lets go of mouse
+		//CODE HERE
+
+		//Clear coordinates
+		coordinates = [];
+
+
 		flag = false;
 	}
-		
+
 	if(res == 'move' && flag) {
+
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
 		prevCordY = newCordY;
-		//Current mouse coordinates.
-		newCordX = e.clientX;
-		newCordY = e.clientY;
+		//Current relative mouse coordinates.
+		newCordX = e.clientX - rect.left;
+		newCordY = e.clientY - rect.top;
+
+
 		//Draw everything
 		draw();
 		}
 }
 
 function draw() {
+
 	ctx.beginPath();
 	ctx.moveTo(prevCordX, prevCordY);
 	ctx.lineTo(newCordX, newCordY);

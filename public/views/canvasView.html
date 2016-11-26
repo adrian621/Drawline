@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
-	<head>	
-		<title>Heading Example</title>
-
-		<style>
-			#canvas{border:1px solid red;}
-		</style>
+	<head>
+		<title>Drawline</title>
+		<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
 	</head>
 
 	<body>
+		<div id="controlDiv">
+			<div id="sizeDiv">
+				<p> Color </p>
+				<select id="size">
+					<option value="2">2</option>
+					<option value="5">5</option>
+				  <option value="10">10</option>
+				  <option value="20">20</option>
+				  <option value="30">30</option>
+				</select>
+			</div>
+			<div id="colorDiv">
+				<p> Size </p>
+				<select id="color">
+				  <option value="red">Red</option>
+				  <option value="black">Black</option>
+				  <option value="pink">Pink</option>
+				</select>
+			</div>
+		</div>
 		<canvas id="canvas" width="600" height="600"></canvas>
+
 	</body>
 
 	<script src="../scripts/canvasScript.js"> </script>

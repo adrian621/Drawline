@@ -13,7 +13,7 @@ app.use(express.static('public'));
 
 app.get('*', function(req, res){
 	var file = req.params[0];
-	res.sendFile(__dirname + '/public/views/' + file);	
+	res.sendFile(__dirname + '/public/views/' + file);
 });
 
 //Set up server to listen to port 2000
@@ -22,5 +22,15 @@ console.log('server is running');
 
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
-			
+
+	socket.on('disconnect', function(){
+    console.log('client disconnected');
+  });
+
+	socket.on('coordinates', function(data){
+		socket.broadcast.emit('ext_coordinates', data);
+
+    console.log('message: ' + (data));
+  });
+
 });

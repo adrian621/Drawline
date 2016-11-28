@@ -57,10 +57,8 @@ function findMove(res, e) {
 		newCordX = e.clientX - rect.left;
 		newCordY = e.clientY - rect.top;
 
-
 		flag = true;
 		dot_flag = true;
-
 
 		if(dot_flag) {
 			ctx.beginPath();

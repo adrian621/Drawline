@@ -1,7 +1,12 @@
-#canvas{border:6px solid pink; display:block;margin:auto;}
+#canvas{border:5px solid #483D8B; display:block;margin:auto;}
 #buttons{text-align:center;}
-#controlDiv{text-align:center;}
+#controlDiv{padding-bottom:25px; text-align:center;}
 #sizeDiv{display:inline-block;}
 #colorDiv{display:inline-block;}
 #size{margin:auto}
-#bb{display:inline-block;}
+#Header{padding-top:11px;text-align:center; color:#6495ED}
+
+body {
+    background-color: #EEE;
+    font-family: Helvetica, Arial, sans-serif;
+}

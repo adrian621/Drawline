@@ -6,6 +6,7 @@
 	</head>
 
 	<body>
+		<h1 id = "Header"> Drawline </h1>
 		<div id="controlDiv">
 			<div id="sizeDiv">
 				<p> Color </p>
@@ -30,13 +31,5 @@
 
 	</body>
 
-	<script>
-	    var socket = io.connect('http://localhost:2000');
-	    socket.on('connect', function(data) {
-	        socket.emit('join', 'Hello World from client');
-	    });
-	</script>
-
-	<script src="/socket.io/socket.io.js"></script>
 	<script src="../scripts/canvasScript.js"> </script>
 </html>

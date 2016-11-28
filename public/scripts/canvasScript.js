@@ -19,12 +19,14 @@ var rect = canvas.getBoundingClientRect()
 
 var size = document.getElementById('size');
 var color = document.getElementById('color');
+var socket = io();
 
-
+socket.on('ext_coordinates', function (data){
+	alert(data);
+})
 
 function findMove(res, e) {
 	if(res == 'down') {
-
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
 		prevCordY = newCordY;
@@ -32,9 +34,6 @@ function findMove(res, e) {
 		newCordX = e.clientX - rect.left;
 		newCordY = e.clientY - rect.top;
 
-		//Save mouse coordinates to send to server
-		coord_tuple = [newCordX, newCordY];
-		coordinates.push(coord_tuple);
 
 		flag = true;
 		dot_flag = true;
@@ -52,7 +51,10 @@ function findMove(res, e) {
 	if(res == 'up') {
 		//Send coordinates to server when user lets go of mouse
 		//CODE HERE
+		var coords_json = JSON.stringify(coordinates);
 
+
+		socket.emit('coordinates', coords_json);
 		//Clear coordinates
 		coordinates = [];
 
@@ -69,6 +71,10 @@ function findMove(res, e) {
 		newCordX = e.clientX - rect.left;
 		newCordY = e.clientY - rect.top;
 
+		//Save mouse coordinates to send to server
+		coord_tuple = [newCordX, newCordY];
+		coordinates.push(coord_tuple);
+
 
 		//Draw everything
 		draw();
@@ -76,6 +82,7 @@ function findMove(res, e) {
 }
 
 function draw() {
+	//Both these values will be sent to server
 	var sizeVal = size.options[size.selectedIndex].value;
 	var colorVal = color.options[color.selectedIndex].value;
 

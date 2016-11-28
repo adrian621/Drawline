@@ -22,7 +22,7 @@ var color = document.getElementById('color');
 var socket = io();
 
 socket.on('ext_coordinates', function (data){
-	alert(data);
+ 	// draw_ext(data); 
 })
 
 function findMove(res, e) {
@@ -53,11 +53,10 @@ function findMove(res, e) {
 		//CODE HERE
 		var coords_json = JSON.stringify(coordinates);
 
+		socket.emit('drawControl', {type: 'coordinates', coord_data: coords_json} );
 
-		socket.emit('coordinates', coords_json);
 		//Clear coordinates
 		coordinates = [];
-
 
 		flag = false;
 	}
@@ -90,7 +89,7 @@ function draw() {
 	x = newCordX-(sizeVal/2);
 	y = newCordY-(sizeVal/2);
 	width = height = (sizeVal/2)
-	
+
 	ctx.fillStyle = colorVal;
 	ctx.lineWidth = sizeVal;
 	ctx.strokeStyle = colorVal;

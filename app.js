@@ -5,6 +5,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
 
+var draw_Control = require('./drawControl');
+
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -22,5 +24,12 @@ console.log('server is running');
 
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
-			
+	
+	//Standard syntax for socket (type(drawControl or userSocket) {data});
+	socket.on('drawControl', function(data){
+	console.log(data.lucastatus);
+	//skicka data till modul drawfuntions
+	draw_Control.drawFunctions(data, socket, io);
+	});
+
 });

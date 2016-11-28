@@ -7,7 +7,14 @@ var draw_Control = module.exports = {};
 
 
 draw_Control.drawFunctions = function(data, socket, io){
-console.log(data);
-socket.broadcast.emit('ext_coordinates', data);	
-	
+
+	switch (data.type) {
+		case 'coordinates':
+			socket.broadcast.emit('ext_coordinates', data.coord_data);
+			break;
+		default:
+			break;
+	}
+
+
 };

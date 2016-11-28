@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 app.get('*', function(req, res){
 	var file = req.params[0];
-	res.sendFile(__dirname + '/public/views/' + file);	
+	res.sendFile(__dirname + '/public/views/' + file);
 });
 
 //Set up server to listen to port 2000
@@ -24,12 +24,12 @@ console.log('server is running');
 
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
-	
+
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
-	console.log(data.lucastatus);
+
 	//skicka data till modul drawfuntions
-	draw_Control.drawFunctions(data, socket, io);
+		draw_Control.drawFunctions(data, socket, io);
 	});
 
 });

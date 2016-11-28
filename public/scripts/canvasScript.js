@@ -42,7 +42,7 @@ function findMove(res, e) {
 		if(dot_flag) {
 			ctx.beginPath();
 			ctx.fillStyle = "black";
-			ctx.fillRect = (newCordX, newCordY, 2, 2);
+			ctx.fillRect = (newCordX, newCordY, size, size);
 			ctx.closePath();
 			dot_flag = false;
 		}
@@ -86,11 +86,17 @@ function draw() {
 	var sizeVal = size.options[size.selectedIndex].value;
 	var colorVal = color.options[color.selectedIndex].value;
 
-	ctx.beginPath();
-	ctx.moveTo(prevCordX, prevCordY);
-	ctx.lineTo(newCordX, newCordY);
-	ctx.strokeStyle = colorVal;
+	var x, y, width, height;
+	x = newCordX-(sizeVal/2);
+	y = newCordY-(sizeVal/2);
+	width = height = (sizeVal/2)
+	
+	ctx.fillStyle = colorVal;
 	ctx.lineWidth = sizeVal;
+	ctx.strokeStyle = colorVal;
+	ctx.rect(x,y,width,height);
+	ctx.fillStyle = colorVal;
+	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
 }

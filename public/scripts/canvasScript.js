@@ -81,16 +81,6 @@ function findMove(res, e) {
 		}
 }
 
-function draw_ext(ec){
-	tx.beginPath();
-	ctx.moveTo(prevCordX, prevCordY);
-	ctx.lineTo(newCordX, newCordY);
-	ctx.strokeStyle = colorVal;
-	ctx.lineWidth = sizeVal;
-	ctx.stroke();
-	ctx.closePath();
-}
-
 function draw() {
 	//Both these values will be sent to server
 	var sizeVal = size.options[size.selectedIndex].value;

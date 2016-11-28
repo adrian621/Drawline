@@ -79,7 +79,7 @@ function findMove(res, e) {
 		coordinates.push(coord_tuple);
 
 
-		//Draw everything
+		//Draw asd
 		draw();
 		}
 }

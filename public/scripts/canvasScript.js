@@ -22,11 +22,30 @@ var color = document.getElementById('color');
 var socket = io();
 
 socket.on('ext_coordinates', function (data){
-console.log("fick coordinater");
- 	// draw_ext(data); 
-
+  draw_ext(data);
 });
 
+function draw_ext(data){
+  var sizeVal = size.options[size.selectedIndex].value;
+  var colorVal = color.options[color.selectedIndex].value;
+
+  for (var i = 0; i < data.length; i++) {
+    var tmp = data[i];
+  	var x, y, width, height;
+  	x = tmp[0];
+  	y = tmp[1];
+  	width = height = (sizeVal/2)
+
+  	ctx.fillStyle = colorVal;
+  	ctx.lineWidth = sizeVal;
+  	ctx.strokeStyle = colorVal;
+  	ctx.rect(x,y,width,height);
+  	ctx.fillStyle = colorVal;
+  	ctx.fill();
+  	ctx.stroke();
+  	ctx.closePath();
+  }
+}
 function findMove(res, e) {
 	if(res == 'down') {
 		//Set old mouse coordinates to "new" previous coordinates
@@ -52,13 +71,8 @@ function findMove(res, e) {
 
 	if(res == 'up') {
 		//Send coordinates to server when user lets go of mouse
-		//CODE HERE
-		var coords_json = JSON.stringify(coordinates);
+		socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 
-		socket.emit('drawControl', {type: 'coordinates', coord_data: coords_json} );
-
-
-		socket.emit('coordinates', coords_json);
 		//Clear coordinates
 		coordinates = [];
 

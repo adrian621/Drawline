@@ -1,4 +1,3 @@
-
 //Import module express and setup express server
 var express = require('express');
 var app = express();
@@ -27,7 +26,6 @@ io.sockets.on('connection', function(socket){
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
-
 	//skicka data till modul drawfuntions
 		draw_Control.drawFunctions(data, socket, io);
 	});

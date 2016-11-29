@@ -36,7 +36,7 @@ function draw_ext(data){
   	var x, y, width, height;
   	x = tmp[0];
   	y = tmp[1];
-  	width = height = (sizeVal/2)
+  	width = height = (sizeVal/2);
 
   	ctx.fillStyle = colorVal;
   	ctx.lineWidth = sizeVal;
@@ -71,7 +71,9 @@ function findMove(res, e) {
 
 	if(res == 'up') {
 		//Send coordinates to server when user lets go of mouse
-		socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+
+	    //* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
+	    //socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 
 		//Clear coordinates
 		coordinates = [];
@@ -103,10 +105,17 @@ function draw() {
 	var sizeVal = size.options[size.selectedIndex].value;
 	var colorVal = color.options[color.selectedIndex].value;
 
+    ctx.beginPath();
+    ctx.moveTo(prevCordX, prevCordY);
+    ctx.lineTo(newCordX, newCordY);
+    ctx.lineWidth = sizeVal;
+    ctx.strokeStyle = colorVal;
+    ctx.stroke();
+    /*
 	var x, y, width, height;
 	x = newCordX-(sizeVal/2);
 	y = newCordY-(sizeVal/2);
-	width = height = (sizeVal/2)
+	width = height = (sizeVal/2);
 
 	ctx.fillStyle = colorVal;
 	ctx.lineWidth = sizeVal;
@@ -116,6 +125,7 @@ function draw() {
 	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
+	*/
 }
 
 function scale_canvas(e){

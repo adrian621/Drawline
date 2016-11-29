@@ -30,6 +30,11 @@
 		<canvas id="canvas" width="600" height="600"></canvas>
 
 	</body>
-
+	<script>
+	    var socket = io.connect('http://localhost:2000');
+	    socket.on('connect', function(data) {
+	        socket.emit('join', 'Hello World from client');
+	    });
+	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 </html>

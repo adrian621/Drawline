@@ -30,10 +30,10 @@ io.sockets.on('connection', function(socket){
 	socket.on('drawControl', function(data){
 	//skicka data till modul drawfuntions
 		draw_Control.drawFunctions(data, socket, io);
-		cnv_Control.drawFunction(data);
+		//cnv_Control.drawFunction(data);   <----HJÄLP
 
 	});
-		
+
 	socket.on('userControl', function(data){
 		draw_Control.userFunctions(data, socket, io);
 		});

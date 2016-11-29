@@ -29,5 +29,9 @@ io.sockets.on('connection', function(socket){
 	//skicka data till modul drawfuntions
 		draw_Control.drawFunctions(data, socket, io);
 	});
+		
+	socket.on('userControl', function(data){
+		draw_Control.userFunctions(data, socket, io);
+		});
 
 });

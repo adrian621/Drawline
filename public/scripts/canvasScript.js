@@ -126,21 +126,21 @@ function draw() {
     ctx.lineWidth = sizeVal;
     ctx.strokeStyle = colorVal;
     ctx.stroke();
-    /*
-	var x, y, width, height;
-	x = newCordX-(sizeVal/2);
-	y = newCordY-(sizeVal/2);
-	width = height = (sizeVal/2);
+	    /*
+		var x, y, width, height;
+		x = newCordX-(sizeVal/2);
+		y = newCordY-(sizeVal/2);
+		width = height = (sizeVal/2);
 
-	ctx.fillStyle = colorVal;
-	ctx.lineWidth = sizeVal;
-	ctx.strokeStyle = colorVal;
-	ctx.rect(x,y,width,height);
-	ctx.fillStyle = colorVal;
-	ctx.fill();
-	ctx.stroke();
-	ctx.closePath();
-	*/
+		ctx.fillStyle = colorVal;
+		ctx.lineWidth = sizeVal;
+		ctx.strokeStyle = colorVal;
+		ctx.rect(x,y,width,height);
+		ctx.fillStyle = colorVal;
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+		*/
 }
 
 function scale_canvas(e){

@@ -15,7 +15,7 @@ draw_Control.drawFunctions = function(data, socket, io){
 		default:
 			break;
 	}
-	
+
 
 };
 

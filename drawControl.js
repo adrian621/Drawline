@@ -5,7 +5,7 @@
 //send to other clients
 var draw_Control = module.exports = {};
 
-draw_Control.drawFunctions = function(data, socket, io){
+draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 	switch (data.type) {
 		case 'coordinates':
@@ -34,6 +34,6 @@ var canvas = {
 saveCoordinates = function(data){
 //console.log(canvas.coordinates);
 	canvas.coordinates.push(data.coord_data);
-	console.log(canvas.coordinates);
+//	console.log(canvas.coordinates);
 
 }

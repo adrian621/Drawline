@@ -22,29 +22,18 @@ draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
 				console.log("New user with username " + data.username + " has connected");
-			
+
 			}
 
 }
 
 var canvas = {
-	coordinates: [],	
+	coordinates: [],
 };
 
 saveCoordinates = function(data){
 //console.log(canvas.coordinates);
-canvas.coordinates.push(data.coord_data);
-console.log(canvas.coordinates);	
-	
+	canvas.coordinates.push(data.coord_data);
+	console.log(canvas.coordinates);
+
 }
-
-
-
-
-
-
-
-
-
-
-

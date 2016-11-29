@@ -33,5 +33,9 @@ io.sockets.on('connection', function(socket){
 		cnv_Control.drawFunction(data);
 
 	});
+		
+	socket.on('userControl', function(data){
+		draw_Control.userFunctions(data, socket, io);
+		});
 
 });

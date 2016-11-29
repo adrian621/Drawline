@@ -36,7 +36,7 @@ function draw_ext(data){
   	var x, y, width, height;
   	x = tmp[0];
   	y = tmp[1];
-  	width = height = (sizeVal/2)
+  	width = height = (sizeVal/2);
 
   	ctx.fillStyle = colorVal;
   	ctx.lineWidth = sizeVal;
@@ -106,7 +106,7 @@ function draw() {
 	var x, y, width, height;
 	x = newCordX-(sizeVal/2);
 	y = newCordY-(sizeVal/2);
-	width = height = (sizeVal/2)
+	width = height = (sizeVal/2);
 
 	ctx.fillStyle = colorVal;
 	ctx.lineWidth = sizeVal;

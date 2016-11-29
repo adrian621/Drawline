@@ -21,6 +21,9 @@ var prevCordY = 0;
 var newCordX = 0;
 var newCordY = 0;
 var dot_flag = false;
+
+//Will look like:
+// coordinates = [[SIZE, COLOR],[x1,y1],[x2,y2]...[xn, yn]]
 var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
@@ -33,28 +36,34 @@ socket.on('ext_coordinates', function (data){
 });
 
 function draw_ext(data){
-  var sizeVal = size.options[size.selectedIndex].value;
-  var colorVal = color.options[color.selectedIndex].value;
+	var sizeVal = data[0];
+	var colorVal = data[1];
 
-  for (var i = 0; i < data.length; i++) {
-    var tmp = data[i];
+  for (var i = 2; i < data.length; i++) {
+
+		var tmp = data[i];
+    var prev_tmp = data[i-1];
+
   	var x, y, width, height;
-  	x = tmp[0];
-  	y = tmp[1];
+  	curr_x = tmp[0];
+  	curr_y = tmp[1];
+
+    prev_x = prev_tmp[0];
+    prev_y = prev_tmp[1];
+
   	width = height = (sizeVal/2);
 
-  	ctx.fillStyle = colorVal;
-  	ctx.lineWidth = sizeVal;
-  	ctx.strokeStyle = colorVal;
-  	ctx.rect(x,y,width,height);
-  	ctx.fillStyle = colorVal;
-  	ctx.fill();
-  	ctx.stroke();
-  	ctx.closePath();
+    ctx.beginPath();
+    ctx.moveTo(prev_x, prev_y);
+    ctx.lineTo(curr_x, curr_y);
+    ctx.lineWidth = sizeVal;
+    ctx.strokeStyle = colorVal;
+    ctx.stroke();
   }
 }
 function findMove(res, e) {
 	if(res == 'down') {
+
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
 		prevCordY = newCordY;
@@ -62,6 +71,8 @@ function findMove(res, e) {
 		newCordX = e.clientX - rect.left;
 		newCordY = e.clientY - rect.top;
 
+		//Add brush color and size as first element in coordinates array.
+		coordinates.push(size.options[size.selectedIndex].value, color.options[color.selectedIndex].value)
 		flag = true;
 		dot_flag = true;
 
@@ -77,7 +88,7 @@ function findMove(res, e) {
 	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
 		res = 'up';
-	    //* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
+	  //* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
 	  socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 		//Clear coordinates
 		coordinates = [];
@@ -115,21 +126,21 @@ function draw() {
     ctx.lineWidth = sizeVal;
     ctx.strokeStyle = colorVal;
     ctx.stroke();
-    /*
-	var x, y, width, height;
-	x = newCordX-(sizeVal/2);
-	y = newCordY-(sizeVal/2);
-	width = height = (sizeVal/2);
+	    /*
+		var x, y, width, height;
+		x = newCordX-(sizeVal/2);
+		y = newCordY-(sizeVal/2);
+		width = height = (sizeVal/2);
 
-	ctx.fillStyle = colorVal;
-	ctx.lineWidth = sizeVal;
-	ctx.strokeStyle = colorVal;
-	ctx.rect(x,y,width,height);
-	ctx.fillStyle = colorVal;
-	ctx.fill();
-	ctx.stroke();
-	ctx.closePath();
-	*/
+		ctx.fillStyle = colorVal;
+		ctx.lineWidth = sizeVal;
+		ctx.strokeStyle = colorVal;
+		ctx.rect(x,y,width,height);
+		ctx.fillStyle = colorVal;
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+		*/
 }
 
 function scale_canvas(e){

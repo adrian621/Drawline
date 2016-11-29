@@ -7,6 +7,8 @@ canvas.addEventListener("mousemove", function(e){
 	findMove('move', e)}, false);
 canvas.addEventListener("mouseup", function(e){
 	findMove('up', e)}, false);
+window.addEventListener('resize', function(e){
+  scale_canvas(e)}, false);
 
 var flag = false;
 var prevCordX = 0;
@@ -15,7 +17,7 @@ var newCordX = 0;
 var newCordY = 0;
 var dot_flag = false;
 var coordinates = [];
-var rect = canvas.getBoundingClientRect()
+var rect = canvas.getBoundingClientRect();
 
 var size = document.getElementById('size');
 var color = document.getElementById('color');
@@ -55,10 +57,8 @@ function findMove(res, e) {
 		newCordX = e.clientX - rect.left;
 		newCordY = e.clientY - rect.top;
 
-
 		flag = true;
 		dot_flag = true;
-
 
 		if(dot_flag) {
 			ctx.beginPath();
@@ -126,4 +126,8 @@ function draw() {
 	ctx.stroke();
 	ctx.closePath();
 	*/
+}
+
+function scale_canvas(e){
+  rect = canvas.getBoundingClientRect();
 }

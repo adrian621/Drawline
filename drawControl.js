@@ -15,6 +15,8 @@ draw_Control.drawFunctions = function(data, socket, io){
 		default:
 			break;
 	}
+	
+
 };
 
 draw_Control.userFunctions = function(data, socket, io){

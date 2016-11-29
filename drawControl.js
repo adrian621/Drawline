@@ -15,6 +15,12 @@ draw_Control.drawFunctions = function(data, socket, io){
 		default:
 			break;
 	}
-
-
 };
+
+draw_Control.userFunctions = function(data, socket, io){
+		switch(data.type){
+			case 'newUser':
+				console.log("New user with username " + data.username + " has connected");
+			
+			}
+}

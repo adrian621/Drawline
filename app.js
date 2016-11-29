@@ -6,6 +6,8 @@ var io = require('socket.io')(server, {});
 
 var draw_Control = require('./drawControl');
 
+var cnv_Control = require('./server_canvas');
+
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -28,6 +30,8 @@ io.sockets.on('connection', function(socket){
 	socket.on('drawControl', function(data){
 	//skicka data till modul drawfuntions
 		draw_Control.drawFunctions(data, socket, io);
+		cnv_Control.drawFunction(data);
+
 	});
 
 });

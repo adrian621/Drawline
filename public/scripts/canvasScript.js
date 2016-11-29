@@ -7,8 +7,13 @@ canvas.addEventListener("mousemove", function(e){
 	findMove('move', e)}, false);
 canvas.addEventListener("mouseup", function(e){
 	findMove('up', e)}, false);
+canvas.addEventListener("mouseout", function(e){
+	findMove('out', e)}, false);
 window.addEventListener('resize', function(e){
   scale_canvas(e)}, false);
+window.addEventListener('scroll', function(e){
+	scale_canvas(e)}, false);
+
 
 var flag = false;
 var prevCordX = 0;
@@ -69,12 +74,11 @@ function findMove(res, e) {
 		}
 	}
 
-	if(res == 'up') {
+	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
-
+		res = 'up';
 	    //* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
-	    //socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
-
+	  socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 		//Clear coordinates
 		coordinates = [];
 

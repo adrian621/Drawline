@@ -18,40 +18,46 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 }
 
-
-
-var onlineUsers = [];
+//USER-SECTION 
 draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
-				//log
-			//	console.log("New user with username " + data.username + " has connected");
 				//add user to list of users
 				addToUserList(data, socket);
 				//send new userList to all clients
-				socket.emit('onlineUsers', {users:onlineUsers});
+				io.emit('onlineUsers', {users:onlineUsers.userNames});
 				break;
 
 			case 'userDisconnect':
-					removeFromUserList(socket);
+					removeFromUserList(socket, io);
 					break;
 			}
 }
 
+var onlineUsers = {
+	userNames:[],
+	ids:[],
+};
+
 addToUserList = function(data, socket){
-	onlineUsers.push({username: data.username, id: socket.id});
+	onlineUsers.userNames.push(data.username);
+	console.log(onlineUsers.userNames);
+	onlineUsers.ids.push(socket.id);
 }
 
-removeFromUserList = function(data){
-	for (var i = 0; i < onlineUsers.length; i++) {
-		
-		if (onlineUsers[i].id == data.id) {
-			 console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
-			 onlineUsers.splice(i, 1);
+removeFromUserList = function(data, io){
+	for (var i = 0; i < onlineUsers.userNames.length; i++) {		
+		if (onlineUsers.ids[i] == data.id) {
+			 //console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
+			 onlineUsers.ids.splice(i, 1);
+			 onlineUsers.userNames.splice(i, 1);
+			 console.log(onlineUsers.userNames);
+			 io.emit('onlineUsers', {users:onlineUsers.userNames});
 			 return;
 		}
 	}
 }
+
 
 /*
 var canvasMatrix = {

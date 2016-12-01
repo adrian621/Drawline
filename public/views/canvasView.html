@@ -7,50 +7,45 @@
 
 	<body>
 		<h1 id = "Header"> Drawline </h1>
-
-		<div id="controlDiv">
-		Online Users
-		<ul id = onlineUsersList>
-
-		</ul>
-			<div id="sizeDiv">
-				<p> Color </p>
-				<select id="size">
-					<option value="2">2</option>
-					<option value="5">5</option>
-				  <option value="10">10</option>
-				  <option value="20">20</option>
-				  <option value="30">30</option>
-				</select>
+		<div id="container">
+			<div id = "usersDiv">
+				<p id = "usersHeader">Online Users</p>
+				<ul id = onlineUsersList></ul>
 			</div>
-			<div id="colorDiv">
-				<p> Size </p>
-				<select id="color">
-				  <option value="red">Red</option>
-				  <option value="black">Black</option>
-				  <option value="pink">Pink</option>
-				</select>
- 			</div>
-		</div>
 
-		<canvas id="canvas" width="600" height="600"></canvas>
+			<div id ="content">
+				<canvas id="canvas" width="600" height="600"></canvas>
+			</div>
 
+			<div id="controlDiv">
+				<div id="sizeDiv">
+					<p> Color </p>
+					<select id="size">
+						<option value="2">2</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+						<option value="30">30</option>
+					</select>
+				</div>
+				<div id="colorDiv">
+					<p> Size </p>
+					<select id="color">
+						<option value="red">Red</option>
+						<option value="black">Black</option>
+						<option value="pink">Pink</option>
+					</select>
+				</div>
+			</div>
+	</div>
 	</body>
 	<script src = "/socket.io/socket.io.js"></script>
+
 	<script>
+	    socket.on('connect', function(data) {
 	    var socket = io();
 
-			//Ping server every 1 second to check round trip time. Send RTT time to server for ordering.
-			setInterval(function() {
-				socket.emit('RTTcheck', Date.now(), function(startTime) {
-				    var latency = Date.now() - startTime;
-				    socket.emit('RTT', [latency, socket.id]);
-				});
-			}, 1000);
-
 	    socket.on('connect', function(data) {
-					//Send this client's id to server
-					socket.emit('clientid', socket.id);
 	        socket.emit('join', 'Hello World from client');
 	    });
 	</script>

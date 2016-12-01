@@ -4,9 +4,10 @@ font-family: Helvetica, Arial, sans-serif;
 
 }
 
+#nameFormId{text-align:center; margin-top:10%}
+
 #nameInputId{
     width: 400px;
     padding: 12px 20px;
     margin: 8px 0;
 }
-

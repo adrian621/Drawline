@@ -25,19 +25,33 @@ draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
 				//log
-				console.log("New user with username " + data.username + " has connected");
+			//	console.log("New user with username " + data.username + " has connected");
 				//add user to list of users
-				addToUserList(data);
+				addToUserList(data, socket);
 				//send new userList to all clients
 				socket.emit('onlineUsers', {users:onlineUsers});
+				break;
 
+			case 'userDisconnect':
+					removeFromUserList(socket);
+					break;
 			}
 }
 
-addToUserList = function(data){
-onlineUsers.push(data.username);
+addToUserList = function(data, socket){
+	onlineUsers.push({username: data.username, id: socket.id});
 }
 
+removeFromUserList = function(data){
+	for (var i = 0; i < onlineUsers.length; i++) {
+		
+		if (onlineUsers[i].id == data.id) {
+			 console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
+			 onlineUsers.splice(i, 1);
+			 return;
+		}
+	}
+}
 
 /*
 var canvasMatrix = {

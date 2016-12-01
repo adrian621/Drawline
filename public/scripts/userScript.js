@@ -7,6 +7,7 @@ getUserName = function(){
 }
 //Skicka till server
 emitUserName = function(userName){
+
 	socket.emit('userControl', {type: 'newUser' , username: userName});
 }
 
@@ -21,7 +22,7 @@ displayUsers = function(userList){
 	list = document.getElementById('onlineUsersList');
 	for(i = 0; i < userList.length; i++){
 			item = document.createElement('li');
-			item.appendChild(document.createTextNode(userList[i]));
+			item.appendChild(document.createTextNode(userList[i].username + " - " + userList[i].id));
 			list.appendChild(item);
 		}
 }

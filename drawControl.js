@@ -5,7 +5,7 @@
 //send to other clients
 var draw_Control = module.exports = {};
 
-draw_Control.drawFunctions = function(data, socket, io, rtt){
+draw_Control.drawFunctions = function(data, socket, io){
 
 	switch (data.type) {
 		case 'coordinates':
@@ -25,19 +25,31 @@ draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
 				//log
-				console.log("New user with username " + data.username + " has connected");
+			//	console.log("New user with username " + data.username + " has connected");
 				//add user to list of users
-				addToUserList(data);
+				addToUserList(data, socket);
 				//send new userList to all clients
 				socket.emit('onlineUsers', {users:onlineUsers});
+				break;
 
+			case 'userDisconnect':
+					removeFromUserList(socket);
+					break;
 			}
 }
 
-addToUserList = function(data){
-onlineUsers.push(data.username);
+addToUserList = function(data, socket){
+	onlineUsers.push({username: data.username, id: socket.id});
 }
 
+removeFromUserList = function(data){
+	for (var i = 0; i < onlineUsers.length; i++) {
+		if (onlineUsers[i].id == data.id) {
+			 onlineUsers.splice(onlineUsers[i], 1);
+			 break;
+		}
+	}
+}
 
 /*
 var canvasMatrix = {

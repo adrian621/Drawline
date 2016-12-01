@@ -9,7 +9,7 @@ draw_Control.drawFunctions = function(data, socket, io){
 
 	switch (data.type) {
 		case 'coordinates':
-			saveCoordinates(data);
+			//saveCoordinates(data);
 			socket.broadcast.emit('ext_coordinates', data.coord_data);
 			break;
 		default:
@@ -18,25 +18,39 @@ draw_Control.drawFunctions = function(data, socket, io){
 
 }
 
+
+
+var onlineUsers = [];
 draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
+				//log
 				console.log("New user with username " + data.username + " has connected");
-			
+				//add user to list of users
+				addToUserList(data);
+				//send new userList to all clients
+				socket.emit('onlineUsers', {users:onlineUsers});
 			}
-
 }
 
-var canvas = {
+addToUserList = function(data){
+onlineUsers.push(data.username);	
+}
+
+
+
+/*
+var canvasMatrix = {
 	coordinates: [],	
 };
 
 saveCoordinates = function(data){
 //console.log(canvas.coordinates);
-canvas.coordinates.push(data.coord_data);
-console.log(canvas.coordinates);	
+canvasMatrix.coordinates.push(data.coord_data);
+console.log(canvasMatrix.coordinates);	
 	
 }
+*/
 
 
 

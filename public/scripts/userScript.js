@@ -21,7 +21,7 @@ displayUsers = function(userList){
 	list = document.getElementById('onlineUsersList');
 	for(i = 0; i < userList.length; i++){
 			item = document.createElement('li');
-			item.appendChild(document.createTextNode(userList[i].username + " - " + userList[i].id));
+			item.appendChild(document.createTextNode(userList[i].username));
 			list.appendChild(item);
 		}
 }

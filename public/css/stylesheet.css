@@ -1,10 +1,16 @@
 #canvas{border:5px solid #483D8B; display:block;margin:auto;}
 #buttons{text-align:center;}
-#controlDiv{padding-bottom:25px; text-align:center;}
+#controlDiv{flex:1;}
 #sizeDiv{display:inline-block;}
 #colorDiv{display:inline-block;}
 #size{margin:auto}
 #Header{padding-top:11px;text-align:center; color:#6495ED}
+#usersDiv{display:inline-block; flex:1;margin-top:5%}
+#usersHeader{color: green;}
+#onlineUsersList{list-style-type: none;}
+#content{margin:auto; flex:3;}
+#container{display: flex; width: 80%; height: 80%; margin:auto;}
+
 
 body {
     background-color: #EEE;

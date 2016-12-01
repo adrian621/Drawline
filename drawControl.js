@@ -43,7 +43,6 @@ addToUserList = function(data, socket){
 }
 
 removeFromUserList = function(data){
-	var tmp;
 	for (var i = 0; i < onlineUsers.length; i++) {
 		tmp = onlineUsers[i].id;
 		if (onlineUsers[i].id == data.id) {

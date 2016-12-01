@@ -42,12 +42,20 @@
 	<script src = "/socket.io/socket.io.js"></script>
 
 	<script>
-	    socket.on('connect', function(data) {
-	    var socket = io();
+	  	var socket = io();
 
 	    socket.on('connect', function(data) {
-	        socket.emit('join', 'Hello World from client');
+				socket.emit('wantCanvas');
 	    });
+
+			setInterval(function(){
+				var c = document.getElementById("canvas");
+			 	var d = c.toDataURL()	;
+			 	socket.emit('canvas', d);
+	    },1000);
+
+
+
 	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>

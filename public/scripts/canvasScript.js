@@ -35,6 +35,17 @@ socket.on('ext_coordinates', function (data){
   draw_ext(data);
 });
 
+socket.on('latestCanvas', function(data){
+	var img = new Image;
+
+	img.onload = function(){
+		ctx.drawImage(img,0,0);
+	}
+
+	img.src = data;
+});
+
+
 function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];

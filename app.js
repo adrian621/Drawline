@@ -5,7 +5,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
 var draw_Control = require('./drawControl');
 
-
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -21,9 +20,10 @@ app.get('*', function(req, res){
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
 
+var c;
+
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
-
 
 	socket.on('disconnect', function(){
 		draw_Control.userFunctions({type: 'userDisconnect'}, socket, io);
@@ -38,5 +38,13 @@ io.sockets.on('connection', function(socket){
 	socket.on('userControl', function(data){
 		draw_Control.userFunctions(data, socket, io);
 		});
+
+	socket.on('canvas', function(data){
+		c = data;
+	});
+
+	socket.on('wantCanvas', function(){
+		socket.emit('latestCanvas', c);
+	});
 
 });

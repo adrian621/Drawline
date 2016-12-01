@@ -5,12 +5,14 @@
 //send to other clients
 var draw_Control = module.exports = {};
 
-draw_Control.drawFunctions = function(data, socket, io, rtt){
 
+draw_Control.drawFunctions = function(data, socket, io, rtt){
+	
 	switch (data.type) {
 		case 'coordinates':
 			//saveCoordinates(data);
 			socket.broadcast.emit('ext_coordinates', data.coord_data);
+
 			break;
 		default:
 			break;
@@ -18,7 +20,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 }
 
-//USER-SECTION 
+//USER-SECTION
 draw_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
@@ -46,7 +48,7 @@ addToUserList = function(data, socket){
 }
 
 removeFromUserList = function(data, io){
-	for (var i = 0; i < onlineUsers.userNames.length; i++) {		
+	for (var i = 0; i < onlineUsers.userNames.length; i++) {
 		if (onlineUsers.ids[i] == data.id) {
 			 //console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
 			 onlineUsers.ids.splice(i, 1);

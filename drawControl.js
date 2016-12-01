@@ -5,7 +5,7 @@
 //send to other clients
 var draw_Control = module.exports = {};
 
-draw_Control.drawFunctions = function(data, socket, io){
+draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 	switch (data.type) {
 		case 'coordinates':
@@ -43,12 +43,17 @@ addToUserList = function(data, socket){
 }
 
 removeFromUserList = function(data){
+	var tmp;
 	for (var i = 0; i < onlineUsers.length; i++) {
+		tmp = onlineUsers[i].id;
 		if (onlineUsers[i].id == data.id) {
+			 console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
 			 onlineUsers.splice(onlineUsers[i], 1);
-			 break;
+			 return;
 		}
 	}
+
+	console.log(data.id + "  !=  " + tmp + "????");
 }
 
 /*

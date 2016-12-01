@@ -7,7 +7,6 @@ getUserName = function(){
 }
 //Skicka till server
 emitUserName = function(userName){
-
 	socket.emit('userControl', {type: 'newUser' , username: userName});
 }
 

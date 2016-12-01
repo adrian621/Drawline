@@ -24,7 +24,7 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
 
-	//remove client from client list when disconnected
+
 	socket.on('disconnect', function(){
 		draw_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	})

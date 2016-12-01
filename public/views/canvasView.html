@@ -7,7 +7,12 @@
 
 	<body>
 		<h1 id = "Header"> Drawline </h1>
+
 		<div id="controlDiv">
+		Online Users
+		<ul id = onlineUsersList>
+
+		</ul>
 			<div id="sizeDiv">
 				<p> Color </p>
 				<select id="size">
@@ -25,15 +30,15 @@
 				  <option value="black">Black</option>
 				  <option value="pink">Pink</option>
 				</select>
-			</div>
+ 			</div>
 		</div>
+
 		<canvas id="canvas" width="600" height="600"></canvas>
 
 	</body>
 	<script src = "/socket.io/socket.io.js"></script>
-	<script src="../scripts/canvasScript.js"> </script>
 	<script>
-	    var socket = io.connect('http://localhost:2000');
+	    var socket = io();
 
 			//Ping server every 1 second to check round trip time. Send RTT time to server for ordering.
 			setInterval(function() {
@@ -49,5 +54,7 @@
 	        socket.emit('join', 'Hello World from client');
 	    });
 	</script>
+	<script src="../scripts/canvasScript.js"> </script>
+	<script src = "../scripts/userScript.js"></script>
 
 </html>

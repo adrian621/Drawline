@@ -48,12 +48,10 @@ removeFromUserList = function(data){
 		tmp = onlineUsers[i].id;
 		if (onlineUsers[i].id == data.id) {
 			 console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
-			 onlineUsers.splice(onlineUsers[i], 1);
+			 onlineUsers.splice(i, 1);
 			 return;
 		}
 	}
-
-	console.log(data.id + "  !=  " + tmp + "????");
 }
 
 /*

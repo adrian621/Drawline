@@ -3,7 +3,6 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
-
 var draw_Control = require('./drawControl');
 
 
@@ -22,14 +21,41 @@ app.get('*', function(req, res){
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
 
+var rtt = 0;
+var clients = [];
+var clientid;
+
 io.sockets.on('connection', function(socket){
 	console.log('client connected');
 
+	//Check round trip time for client
+	socket.on('RTTcheck', function (startTime, cb) {
+	  cb(startTime);
+	});
+
+	//Set var rtt to client's round trip time
+	socket.on('RTT', function(data){
+		//rtt = data[0];
+		updateRTT(data[1], data[0]);
+		console.log(clients);
+	});
+
+	//Get client's ID and add to client list
+	socket.on('clientid', function(data){
+		clientid = data;
+
+		clients.push({id: data, latency: 0});
+	});
+
+	//remove client from client list when disconnected
+	socket.on('disconnect', function(){
+		var index = clients.indexOf(clientid);
+		clients.splice(index, 1);
+	})
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
 	//skicka data till modul drawfunctions
-		draw_Control.drawFunctions(data, socket, io);
-
+		draw_Control.drawFunctions(data, socket, io, rtt);
 	});
 
 	socket.on('userControl', function(data){
@@ -37,3 +63,12 @@ io.sockets.on('connection', function(socket){
 		});
 
 });
+
+function updateRTT(c_id, curr_latency) {
+   for (var i = 0; i < clients.length; i++) {
+     if (clients[i].id == c_id) {
+        clients[i].latency = curr_latency;
+        break;
+     }
+   }
+}

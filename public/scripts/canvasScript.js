@@ -54,6 +54,7 @@ function draw_ext(data){
   	width = height = (sizeVal/2);
 
     ctx.beginPath();
+		ctx.lineCap = "round";
     ctx.moveTo(prev_x, prev_y);
     ctx.lineTo(curr_x, curr_y);
     ctx.lineWidth = sizeVal;
@@ -117,10 +118,11 @@ function findMove(res, e) {
 
 function draw() {
 	//Both these values will be sent to server
-	var sizeVal = size.options[size.selectedIndex].value;
-	var colorVal = color.options[color.selectedIndex].value;
+		var sizeVal = size.options[size.selectedIndex].value;
+		var colorVal = color.options[color.selectedIndex].value;
 
     ctx.beginPath();
+		ctx.lineCap = "round";
     ctx.moveTo(prevCordX, prevCordY);
     ctx.lineTo(newCordX, newCordY);
     ctx.lineWidth = sizeVal;

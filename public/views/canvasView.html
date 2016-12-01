@@ -7,7 +7,7 @@
 
 	<body>
 		<h1 id = "Header"> Drawline </h1>
-		
+
 		<div id="controlDiv">
 		Online Users
 		<ul id = onlineUsersList>
@@ -32,16 +32,29 @@
 				</select>
  			</div>
 		</div>
-		
+
 		<canvas id="canvas" width="600" height="600"></canvas>
 
 	</body>
-	
-	    
 	<script src = "/socket.io/socket.io.js"></script>
-			<script>
-	    var socket2 = io();
-	    </script>
+	<script>
+	    var socket = io();
+
+			//Ping server every 1 second to check round trip time. Send RTT time to server for ordering.
+			setInterval(function() {
+				socket.emit('RTTcheck', Date.now(), function(startTime) {
+				    var latency = Date.now() - startTime;
+				    socket.emit('RTT', [latency, socket.id]);
+				});
+			}, 1000);
+
+	    socket.on('connect', function(data) {
+					//Send this client's id to server
+					socket.emit('clientid', socket.id);
+	        socket.emit('join', 'Hello World from client');
+	    });
+	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>
+
 </html>

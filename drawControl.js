@@ -5,7 +5,7 @@
 //send to other clients
 var draw_Control = module.exports = {};
 
-draw_Control.drawFunctions = function(data, socket, io){
+draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 	switch (data.type) {
 		case 'coordinates':
@@ -30,35 +30,29 @@ draw_Control.userFunctions = function(data, socket, io){
 				addToUserList(data);
 				//send new userList to all clients
 				socket.emit('onlineUsers', {users:onlineUsers});
+
 			}
 }
 
 addToUserList = function(data){
-onlineUsers.push(data.username);	
+onlineUsers.push(data.username);
 }
-
 
 
 /*
 var canvasMatrix = {
-	coordinates: [],	
+	coordinates: [],
+>>>>>>> 1b2e215d5264a1a3eb83c4a6417be1342db439ab
 };
 
 saveCoordinates = function(data){
 //console.log(canvas.coordinates);
+<<<<<<< HEAD
+	canvas.coordinates.push(data.coord_data);
+//	console.log(canvas.coordinates);
+=======
 canvasMatrix.coordinates.push(data.coord_data);
-console.log(canvasMatrix.coordinates);	
-	
+console.log(canvasMatrix.coordinates);
+
 }
 */
-
-
-
-
-
-
-
-
-
-
-

@@ -4,13 +4,13 @@
 #sizeDiv{display:inline-block;}
 #colorDiv{display:inline-block;}
 #size{margin:auto}
-#Header{padding-top:11px;text-align:center; color:#6495ED}
+#Header{text-align:center; color:#6495ED}
 #usersDiv{display:inline-block; flex:1;margin-top:5%}
-#usersHeader{color: green;}
-#onlineUsersList{list-style-type: none;}
+#usersHeader{color: green; text-align:center;}
+#onlineUsersList{list-style-type: none;text-align:center;}
 #content{margin:auto; flex:3;}
 #container{display: flex; width: 80%; height: 80%; margin:auto;}
-
+li{}
 
 body {
     background-color: #EEE;

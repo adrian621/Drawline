@@ -35,17 +35,19 @@ io.sockets.on('connection', function(socket){
 
 	//Set var rtt to client's round trip time
 	socket.on('RTT', function(data){
-		rtt = data;
+		//rtt = data[0];
+		updateRTT(data[1], data[0]);
+		console.log(clients);
 	});
 
 	//Get client's ID and add to client list
 	socket.on('clientid', function(data){
 		clientid = data;
-		clients.push(data);
-		console.log(clients);
+
+		clients.push({id: data, latency: 0});
 	});
 
-	//remove client from clientlist when disconnected
+	//remove client from client list when disconnected
 	socket.on('disconnect', function(){
 		var index = clients.indexOf(clientid);
 		clients.splice(index, 1);
@@ -61,3 +63,12 @@ io.sockets.on('connection', function(socket){
 		});
 
 });
+
+function updateRTT(c_id, curr_latency) {
+   for (var i = 0; i < clients.length; i++) {
+     if (clients[i].id == c_id) {
+        clients[i].latency = curr_latency;
+        break;
+     }
+   }
+}

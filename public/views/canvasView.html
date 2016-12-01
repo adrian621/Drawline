@@ -39,7 +39,7 @@
 			setInterval(function() {
 				socket.emit('RTTcheck', Date.now(), function(startTime) {
 				    var latency = Date.now() - startTime;
-				    socket.emit('RTT', latency);
+				    socket.emit('RTT', [latency, socket.id]);
 				});
 			}, 1000);
 

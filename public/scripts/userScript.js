@@ -16,12 +16,22 @@ window.onload = function(){
 	emitUserName(userName);
 }
 
+//Tömmer den gamla listan innan vi fyller på den nya
+emptyList = function (ul){
+  if (ul) {
+    while (ul.firstChild) {
+      ul.removeChild(ul.firstChild);
+    }
+  }
+}
+
 //Display i lista
 displayUsers = function(userList){
-	list = document.getElementById('onlineUsersList');
+	
+	emptyList(list);
 	for(i = 0; i < userList.length; i++){
 			item = document.createElement('li');
-			item.appendChild(document.createTextNode(userList[i].username));
+			item.appendChild(document.createTextNode(userList[i]));
 			list.appendChild(item);
 		}
 }

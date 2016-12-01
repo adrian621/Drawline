@@ -44,7 +44,7 @@ addToUserList = function(data, socket){
 
 removeFromUserList = function(data){
 	for (var i = 0; i < onlineUsers.length; i++) {
-		tmp = onlineUsers[i].id;
+		
 		if (onlineUsers[i].id == data.id) {
 			 console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
 			 onlineUsers.splice(i, 1);

@@ -32,7 +32,19 @@ var color = document.getElementById('color');
 var socket = io();
 
 socket.on('ext_coordinates', function (data){
+
   draw_ext(data);
+
+});
+
+socket.on('latestCanvas', function(data){
+	var img = new Image;
+
+	img.onload = function(){
+		ctx.drawImage(img,0,0);
+	}
+
+	img.src = data;
 });
 
 socket.on('ext_clear', function(data) {
@@ -43,9 +55,9 @@ function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];
 
-  for (var i = 2; i < data.length; i++) {
+  for (var i = 3; i < data.length; i++) {
 
-	var tmp = data[i];
+		var tmp = data[i];
     var prev_tmp = data[i-1];
 
   	var x, y, width, height;
@@ -58,7 +70,7 @@ function draw_ext(data){
   	width = height = (sizeVal/2);
 
     ctx.beginPath();
-	ctx.lineCap = "round";
+		ctx.lineCap = "round";
     ctx.moveTo(prev_x, prev_y);
     ctx.lineTo(curr_x, curr_y);
     ctx.lineWidth = sizeVal;
@@ -140,4 +152,3 @@ function scale_canvas(e){
 function clearCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-

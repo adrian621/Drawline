@@ -8,21 +8,21 @@
 	<body>
 		<h1 id = "Header"> Drawline </h1>
 		<div id="container">
-
-		<div id = "usersVotes">
-				<div id = "userOwnVote">
-					<p> You have voted </p> <p id=specificUserVote></p>
-					<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
-				</div>
-				<div id = "procentOfTrueVotes">
-					<!-- <p> Current procent of votes for clearing canvas </p> -->
-					<p id=prcForClear></p>
-				</div>
-			</div>
-
 			<div id = "usersDiv">
-				<p id = "usersHeader">Online Users</p>
-				<ul id = onlineUsersList></ul>
+				<div id = "usersVotes">
+						<div id = "userOwnVote">
+							<p> You have voted </p> <p id=specificUserVote></p>
+							<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+						</div>
+						<div id = "procentOfTrueVotes">
+							<!-- <p> Current procent of votes for clearing canvas </p> -->
+							<p id=prcForClear></p>
+						</div>
+				</div>
+					<div id = "users">
+					<p id = "usersHeader">Online Users</p>
+					<ul id = onlineUsersList></ul>
+				</div>
 			</div>
 
 			<div id ="content">
@@ -54,12 +54,13 @@
 	<script src = "/socket.io/socket.io.js"></script>
 
 	<script>
-	    socket.on('connect', function(data) {
-	    var socket = io();
+	  	var socket = io();
 
 	    socket.on('connect', function(data) {
-	        socket.emit('join', 'Hello World from client');
+				socket.emit('wantCanvas');
 	    });
+
+
 	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>

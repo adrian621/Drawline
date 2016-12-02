@@ -27,7 +27,7 @@ emptyList = function (ul){
 
 //Display i lista
 displayUsers = function(userList){
-	
+	list = document.getElementById('onlineUsersList');
 	emptyList(list);
 	for(i = 0; i < userList.length; i++){
 			item = document.createElement('li');

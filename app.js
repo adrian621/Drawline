@@ -23,20 +23,20 @@ server.listen(process.env.PORT || 2000);
 console.log('server is running');
 
 io.sockets.on('connection', function(socket){
-	console.log('client connected');
+console.log('client connected');
 
-	//Standard syntax for socket (type(drawControl or userSocket) {data});
-	socket.on('drawControl', function(data){
-	//skicka data till modul drawfunctions
-		draw_Control.drawFunctions(data, socket, io);
-	});
+//Standard syntax for socket (type(drawControl or userSocket) {data});
+socket.on('drawControl', function(data){
+//skicka data till modul drawfunctions
+	draw_Control.drawFunctions(data, socket, io);
+});
 
-	socket.on('userControl', function(data){
-		user_Control.userFunctions(data, socket, io);
-		});
-		
-	socket.on('disconnect', function(){
-		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
-	});
+socket.on('userControl', function(data){
+	user_Control.userFunctions(data, socket, io);
+});
+	
+socket.on('disconnect', function(){
+	user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+});
 
 });

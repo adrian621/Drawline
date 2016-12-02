@@ -55,7 +55,7 @@ function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];
 
-  for (var i = 2; i < data.length; i++) {
+  for (var i = 3; i < data.length; i++) {
 
 		var tmp = data[i];
     var prev_tmp = data[i-1];

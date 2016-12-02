@@ -60,11 +60,6 @@
 				socket.emit('wantCanvas');
 	    });
 
-			setInterval(function(){
-				var c = document.getElementById("canvas");
-			 	var d = c.toDataURL()	;
-			 	socket.emit('canvas', d);
-	    },1000);
 
 	</script>
 	<script src="../scripts/canvasScript.js"> </script>

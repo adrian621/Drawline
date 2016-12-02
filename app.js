@@ -24,8 +24,6 @@ app.get('*', function(req, res){
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
 
-var c = read_canvas();
-
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 
@@ -44,27 +42,22 @@ console.log('client connected');
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	});
 
-	socket.on('canvas', function(data){
-		c = data;
-
-		//Save canvas' dataURL on server locally.
-		save_canvas();
-	});
-
 	socket.on('wantCanvas', function(){
-		socket.emit('latestCanvas', c);
+		socket.emit('latestCanvas', draw_Control.getServerCanvas());
 	});
 
 });
 
+//Save server's canvas dataURL(string) locally on server
 function save_canvas(){
-	fs.writeFile("./canvasDataURL.txt", c, function(err) {
+	fs.writeFile("./canvasDataURL.txt", draw_Control.getServerCanvas(), function(err) {
 	    if(err) {
 	        return console.log(err);
 	    }
 	});
 }
 
+//Returns server's stored canvas dataURL (string)
 function read_canvas(){
  var canvas_dataURL;
 	try{

@@ -12,6 +12,11 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 			//saveCoordinates(data);
 			socket.broadcast.emit('ext_coordinates', data.coord_data);
 			break;
+			/*
+		case 'clearCanvas':
+			socket.broadcast.emit('ext_clear');
+			break;
+			*/
 		default:
 			break;
 	}

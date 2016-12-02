@@ -24,25 +24,25 @@ app.get('*', function(req, res){
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
 
-var c;
+var c = read_canvas();
 
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 
 
-//Standard syntax for socket (type(drawControl or userSocket) {data});
-socket.on('drawControl', function(data){
-//skicka data till modul drawfunctions
-	draw_Control.drawFunctions(data, socket, io);
-});
+	//Standard syntax for socket (type(drawControl or userSocket) {data});
+	socket.on('drawControl', function(data){
+	//skicka data till modul drawfunctions
+		draw_Control.drawFunctions(data, socket, io);
+	});
 
-socket.on('userControl', function(data){
-	user_Control.userFunctions(data, socket, io);
-});
+	socket.on('userControl', function(data){
+		user_Control.userFunctions(data, socket, io);
+	});
 
-socket.on('disconnect', function(){
-	user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
-});
+	socket.on('disconnect', function(){
+		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+	});
 
 	socket.on('canvas', function(data){
 		c = data;
@@ -66,6 +66,14 @@ function save_canvas(){
 }
 
 function read_canvas(){
-	var canvas_dataURL = fs.readFileSync('./canvasDataURL.txt','utf8')
+ var canvas_dataURL;
+	try{
+		canvas_dataURL = fs.readFileSync('./canvasDataURL.txt','utf8');
+
+	}catch(err) {
+		console.log(err);
+		return;
+	}
+
 	return canvas_dataURL;
 }

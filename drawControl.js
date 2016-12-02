@@ -43,5 +43,3 @@ console.log(canvasMatrix.coordinates);
 
 }
 */
-=======
->>>>>>> 5c47cbdc90b5cc3ebf9c9e6cbfcd63ee0ca47bc3

@@ -5,12 +5,15 @@
 #colorDiv{display:inline-block;}
 #size{margin:auto}
 #Header{text-align:center; color:#6495ED}
-#usersDiv{display:inline-block; flex:1;margin-top:5%}
+#usersDiv{flex:1; display:flex;}
 #usersHeader{color: green; text-align:center;}
-#onlineUsersList{list-style-type: none;text-align:center;}
-#content{margin:auto; flex:3;}
-#container{display: flex; width: 80%; height: 80%; margin:auto;}
-li{}
+#onlineUsersList{list-style-type: none;}
+#content{text-align:center; flex:3;}
+#container{display: flex; width: 100%; height: 80%; margin:auto;}
+#usersVotes{flex:1;display:inline-block;}
+#users{flex:1;display:inline-block;}
+
+li{margin-bottom:10%;; /* limit width */}
 
 body {
     background-color: #EEE;

@@ -1,3 +1,13 @@
+//Code for Voting-button
+var vote_button = document.getElementById('voteButtonID');
+vote_button.addEventListener("click", function() {
+	socket.emit('userControl', {type:'userChange'});
+});
+
+//Code for percentage of TRUE votes (for clearing canvas).
+var prcForClear = document.createElement('prcForClear');
+var intPrcForClear = document.createTextNode("0");
+prcForClear.appendChild(intPrcForClear);
 
 //Hämta ut parameter
 getUserName = function(){

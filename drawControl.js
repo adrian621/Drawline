@@ -7,57 +7,22 @@ var draw_Control = module.exports = {};
 
 
 draw_Control.drawFunctions = function(data, socket, io, rtt){
-	
+
 	switch (data.type) {
 		case 'coordinates':
 			//saveCoordinates(data);
 			socket.broadcast.emit('ext_coordinates', data.coord_data);
 
 			break;
+			/*
+		case 'clearCanvas':
+			socket.broadcast.emit('ext_clear');
+			break;
+			*/
 		default:
 			break;
 	}
 
-}
-
-//USER-SECTION
-draw_Control.userFunctions = function(data, socket, io){
-		switch(data.type){
-			case 'newUser':
-				//add user to list of users
-				addToUserList(data, socket);
-				//send new userList to all clients
-				io.emit('onlineUsers', {users:onlineUsers.userNames});
-				break;
-
-			case 'userDisconnect':
-					removeFromUserList(socket, io);
-					break;
-			}
-}
-
-var onlineUsers = {
-	userNames:[],
-	ids:[],
-};
-
-addToUserList = function(data, socket){
-	onlineUsers.userNames.push(data.username);
-	console.log(onlineUsers.userNames);
-	onlineUsers.ids.push(socket.id);
-}
-
-removeFromUserList = function(data, io){
-	for (var i = 0; i < onlineUsers.userNames.length; i++) {
-		if (onlineUsers.ids[i] == data.id) {
-			 //console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
-			 onlineUsers.ids.splice(i, 1);
-			 onlineUsers.userNames.splice(i, 1);
-			 console.log(onlineUsers.userNames);
-			 io.emit('onlineUsers', {users:onlineUsers.userNames});
-			 return;
-		}
-	}
 }
 
 
@@ -78,3 +43,5 @@ console.log(canvasMatrix.coordinates);
 
 }
 */
+=======
+>>>>>>> 5c47cbdc90b5cc3ebf9c9e6cbfcd63ee0ca47bc3

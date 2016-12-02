@@ -8,6 +8,18 @@
 	<body>
 		<h1 id = "Header"> Drawline </h1>
 		<div id="container">
+
+		<div id = "usersVotes">
+				<div id = "userOwnVote">
+					<p> You have voted </p> <p id=specificUserVote></p>
+					<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+				</div>
+				<div id = "procentOfTrueVotes">
+					<!-- <p> Current procent of votes for clearing canvas </p> -->
+					<p id=prcForClear></p>
+				</div>
+			</div>
+
 			<div id = "usersDiv">
 				<p id = "usersHeader">Online Users</p>
 				<ul id = onlineUsersList></ul>
@@ -37,7 +49,7 @@
 					</select>
 				</div>
 			</div>
-	</div>
+		</div>
 	</body>
 	<script src = "/socket.io/socket.io.js"></script>
 

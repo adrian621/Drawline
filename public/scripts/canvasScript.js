@@ -45,14 +45,18 @@ socket.on('latestCanvas', function(data){
 	img.src = data;
 });
 
+socket.on('ext_clear', function(data) {
+	clearCanvas(data);
+});
 
+>>>>>>> 5c47cbdc90b5cc3ebf9c9e6cbfcd63ee0ca47bc3
 function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];
 
   for (var i = 2; i < data.length; i++) {
 
-		var tmp = data[i];
+	var tmp = data[i];
     var prev_tmp = data[i-1];
 
   	var x, y, width, height;
@@ -65,7 +69,7 @@ function draw_ext(data){
   	width = height = (sizeVal/2);
 
     ctx.beginPath();
-		ctx.lineCap = "round";
+	ctx.lineCap = "round";
     ctx.moveTo(prev_x, prev_y);
     ctx.lineTo(curr_x, curr_y);
     ctx.lineWidth = sizeVal;
@@ -100,8 +104,8 @@ function findMove(res, e) {
 	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
 		res = 'up';
-	  //* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
-	  socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+	  	//* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
+	 	 socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 		//Clear coordinates
 		coordinates = [];
 
@@ -121,41 +125,29 @@ function findMove(res, e) {
 		coord_tuple = [newCordX, newCordY];
 		coordinates.push(coord_tuple);
 
-
-		//Draw asd
 		draw();
-		}
+	}
 }
 
 function draw() {
 	//Both these values will be sent to server
-		var sizeVal = size.options[size.selectedIndex].value;
-		var colorVal = color.options[color.selectedIndex].value;
+	var sizeVal = size.options[size.selectedIndex].value;
+	var colorVal = color.options[color.selectedIndex].value;
 
     ctx.beginPath();
-		ctx.lineCap = "round";
+	ctx.lineCap = "round";
     ctx.moveTo(prevCordX, prevCordY);
     ctx.lineTo(newCordX, newCordY);
     ctx.lineWidth = sizeVal;
     ctx.strokeStyle = colorVal;
     ctx.stroke();
-	    /*
-		var x, y, width, height;
-		x = newCordX-(sizeVal/2);
-		y = newCordY-(sizeVal/2);
-		width = height = (sizeVal/2);
 
-		ctx.fillStyle = colorVal;
-		ctx.lineWidth = sizeVal;
-		ctx.strokeStyle = colorVal;
-		ctx.rect(x,y,width,height);
-		ctx.fillStyle = colorVal;
-		ctx.fill();
-		ctx.stroke();
-		ctx.closePath();
-		*/
 }
 
 function scale_canvas(e){
   rect = canvas.getBoundingClientRect();
+}
+
+function clearCanvas() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }

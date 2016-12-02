@@ -4,6 +4,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
 var draw_Control = require('./drawControl');
+var user_Control = require('./userControl');
 
 //Reading and writing files
 var fs = require('fs');
@@ -26,21 +27,22 @@ console.log('server is running');
 var c;
 
 io.sockets.on('connection', function(socket){
-	console.log('client connected');
+console.log('client connected');
 
-	socket.on('disconnect', function(){
-		draw_Control.userFunctions({type: 'userDisconnect'}, socket, io);
-	})
 
-	//Standard syntax for socket (type(drawControl or userSocket) {data});
-	socket.on('drawControl', function(data){
-	//skicka data till modul drawfunctions
-		draw_Control.drawFunctions(data, socket, io);
-	});
+//Standard syntax for socket (type(drawControl or userSocket) {data});
+socket.on('drawControl', function(data){
+//skicka data till modul drawfunctions
+	draw_Control.drawFunctions(data, socket, io);
+});
 
-	socket.on('userControl', function(data){
-		draw_Control.userFunctions(data, socket, io);
-		});
+socket.on('userControl', function(data){
+	user_Control.userFunctions(data, socket, io);
+});
+
+socket.on('disconnect', function(){
+	user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+});
 
 	socket.on('canvas', function(data){
 		c = data;

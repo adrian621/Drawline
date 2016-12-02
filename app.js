@@ -5,6 +5,9 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
 var draw_Control = require('./drawControl');
 
+//Reading and writing files
+var fs = require('fs');
+
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -41,6 +44,9 @@ io.sockets.on('connection', function(socket){
 
 	socket.on('canvas', function(data){
 		c = data;
+
+		//Save canvas' dataURL on server locally.
+		save_canvas();
 	});
 
 	socket.on('wantCanvas', function(){
@@ -48,3 +54,16 @@ io.sockets.on('connection', function(socket){
 	});
 
 });
+
+function save_canvas(){
+	fs.writeFile("./canvasDataURL.txt", c, function(err) {
+	    if(err) {
+	        return console.log(err);
+	    }
+	});
+}
+
+function read_canvas(){
+	var canvas_dataURL = fs.readFileSync('./canvasDataURL.txt','utf8')
+	return canvas_dataURL;
+}

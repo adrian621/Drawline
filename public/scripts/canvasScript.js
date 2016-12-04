@@ -1,6 +1,7 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
 
+
 canvas.addEventListener("mousedown", function(e){
 	findMove('down', e)}, false);
 canvas.addEventListener("mousemove", function(e){
@@ -37,6 +38,10 @@ socket.on('ext_coordinates', function (data){
 
 socket.on('ext_clear', function(data) {
 	clearCanvas(data);
+});
+
+socket.on('curr_vote', function(data) {
+	document.getElementById('specificUserVote').innerHTML = data.toString();
 });
 
 function draw_ext(data){

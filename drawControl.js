@@ -4,7 +4,9 @@
 //control valid
 //send to other clients
 var draw_Control = module.exports = {};
-var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
+
+//UNCOMMENT THIS LATER
+//var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
 
 
 draw_Control.getServerCanvas = function(){
@@ -17,7 +19,8 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		case 'coordinates':
 			//saveCoordinates(data);
 			socket.broadcast.emit('ext_coordinates', data.coord_data);
-			drawServerCanvas(data.coord_data);
+			//UNCOMMENT THIS LATER
+			//drawServerCanvas(data.coord_data);
 			break;
 			/*
 		case 'clearCanvas':

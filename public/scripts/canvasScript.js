@@ -1,6 +1,18 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
 
+var preview_canvas = document.getElementById('preview_canvas');
+var preview_ctx = preview_canvas.getContext("2d");
+
+var size = document.getElementById('size');
+var color = document.getElementById('color');
+
+window.addEventListener('mousedown', function(){
+	draw_preview()}, false);
+size.addEventListener("input", function(){
+	draw_preview()}, false);
+color.addEventListener("input", function(){
+	draw_preview()}, false);
 canvas.addEventListener("mousedown", function(e){
 	findMove('down', e)}, false);
 canvas.addEventListener("mousemove", function(e){
@@ -14,7 +26,6 @@ window.addEventListener('resize', function(e){
 window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
 
-
 var flag = false;
 var prevCordX = 0;
 var prevCordY = 0;
@@ -27,15 +38,17 @@ var dot_flag = false;
 var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
-var size = document.getElementById('size');
-var color = document.getElementById('color');
+
 var socket = io();
 
-socket.on('ext_coordinates', function (data){
-
-  draw_ext(data);
-
+socket.on('connect', function(){
+	draw_preview();
 });
+
+socket.on('ext_coordinates', function (data){
+  draw_ext(data);
+});
+
 
 socket.on('latestCanvas', function(data){
 	var img = new Image;
@@ -89,7 +102,7 @@ function findMove(res, e) {
 		newCordY = e.clientY - rect.top;
 
 		//Add brush color and size as first element in coordinates array.
-		coordinates.push(size.options[size.selectedIndex].value, color.options[color.selectedIndex].value)
+		coordinates.push(size.value, "#"+color.value);
 		flag = true;
 		dot_flag = true;
 
@@ -132,19 +145,35 @@ function findMove(res, e) {
 
 function draw() {
 	//Both these values will be sent to server
-	var sizeVal = size.options[size.selectedIndex].value;
-	var colorVal = color.options[color.selectedIndex].value;
+	var sizeVal = size.value;
+	var colorVal = "#"+color.value;
 
-    ctx.beginPath();
+  ctx.beginPath();
 	ctx.lineCap = "round";
-    ctx.moveTo(prevCordX, prevCordY);
-    ctx.lineTo(newCordX, newCordY);
-    ctx.lineWidth = sizeVal;
-    ctx.strokeStyle = colorVal;
-    ctx.stroke();
+  ctx.moveTo(prevCordX, prevCordY);
+  ctx.lineTo(newCordX, newCordY);
+  ctx.lineWidth = sizeVal;
+  ctx.strokeStyle = colorVal;
+  ctx.stroke();
 
+	draw_preview();
 }
 
+function draw_preview(){
+	preview_ctx.clearRect(0,0, preview_canvas.width, preview_canvas.height);
+	var sizeVal = size.value;
+	var colorVal = "#"+color.value;
+
+	x = preview_canvas.width /4;
+	y = preview_canvas.height /2;
+  preview_ctx.beginPath();
+	preview_ctx.lineCap = "round";
+  preview_ctx.moveTo(x, y);
+  preview_ctx.lineTo(x, y);
+  preview_ctx.lineWidth = sizeVal;
+  preview_ctx.strokeStyle = colorVal;
+  preview_ctx.stroke();
+}
 function scale_canvas(e){
   rect = canvas.getBoundingClientRect();
 }

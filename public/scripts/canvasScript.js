@@ -14,7 +14,6 @@ window.addEventListener('resize', function(e){
 window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
 
-
 var flag = false;
 var prevCordX = 0;
 var prevCordY = 0;
@@ -89,7 +88,8 @@ function findMove(res, e) {
 		newCordY = e.clientY - rect.top;
 
 		//Add brush color and size as first element in coordinates array.
-		coordinates.push(size.options[size.selectedIndex].value, color.options[color.selectedIndex].value)
+		coordinates.push(size.value, "#"+color.value);
+		console.log("#"+color.value);
 		flag = true;
 		dot_flag = true;
 
@@ -132,8 +132,8 @@ function findMove(res, e) {
 
 function draw() {
 	//Both these values will be sent to server
-	var sizeVal = size.options[size.selectedIndex].value;
-	var colorVal = color.options[color.selectedIndex].value;
+	var sizeVal = size.value;
+	var colorVal = "#"+color.value;
 
     ctx.beginPath();
 	ctx.lineCap = "round";

@@ -64,6 +64,10 @@ socket.on('ext_clear', function(data) {
 	clearCanvas(data);
 });
 
+socket.on('curr_vote', function(data) {
+	document.getElementById('specificUserVote').innerHTML = data.toString();
+});
+
 function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];

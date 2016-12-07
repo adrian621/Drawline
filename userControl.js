@@ -28,22 +28,34 @@ user_Control.userFunctions = function(data, socket, io){
 var onlineUsers = {
 	userNames:[],
 	ids:[],
+	votes:[],
 };
 
-var onlineUsersVote = {
+var unlineUsersVote = {
 	ids:[],
 	votes:[],
 };
 
 // ************ FUNCTIONS FOR HANDLING USERS VOTES       ***************************
 initUserVote = function(socket) {
-	onlineUsersVote.ids.push(socket.id);
-	onlineUsersVote.votes.push(false);
-	console.log(onlineUsersVote.votes);
+	//onlineUsersVote.ids.push(socket.id);
+	//onlineUsersVote.votes.push(false);
+	onlineUsers.votes.push(false);
+	socket.emit('curr_vote', false);
+	console.log(onlineUsers.votes);
+	//console.log(onlineUsersVote.votes);
 }
 
 
 removeUserVote = function(socket) {
+	for (var i = 0; i < onlineUsers.votes.length; i++) {
+		if(onlineUsers.ids[i] == socket.id) {
+			onlineUsers.votes.splice(i,1);
+			console.log(onlineUsers.votes);
+			return;
+		}
+	}
+	/*
 	for (var i = 0; i < onlineUsersVote.votes.length; i++) {
 		if(onlineUsersVote.ids[i] == socket.id) {
 			onlineUsersVote.votes.splice(i,1);
@@ -52,24 +64,67 @@ removeUserVote = function(socket) {
 			return;
 		}
 	}
+	*/
 }
 
 changeUserVote = function(socket) {
+	//Go through all users and find the one who changes their mind.
+	for (var i = 0; i < onlineUsers.votes.length; i++) {
+		//When the user is find change the vote to the opposite of what it is.
+		if(onlineUsers.ids[i] == socket.id) {
+			onlineUsers.votes[i] = !onlineUsers.votes[i];
+			socket.emit('curr_vote', onlineUsers.votes[i]);
+			console.log(onlineUsers.userNames);
+			console.log(onlineUsers.votes);
+			return;
+		}
+	}
+
+	/*
 	//Go through all users and find the one who changes their mind.
 	for (var i = 0; i < onlineUsersVote.votes.length; i++) {
 		//When the user is find change the vote to the opposite of what it is.
 		if(onlineUsersVote.ids[i] == socket.id) {
 			onlineUsersVote.votes[i] = !onlineUsersVote.votes[i];
+			socket.emit('curr_vote', onlineUsersVote.votes[i]);
 			console.log(onlineUsers.userNames);
 			console.log(onlineUsersVote.votes);
 			return;
 		}
 	}
+	*/
 }
+
+setAllFalse = function(io) {
+	for(var i=0; i<onlineUsers.votes.length; i++) {
+		onlineUsers.votes[i] = false;
+		io.emit('curr_vote', false);
+	}
+	console.log(onlineUsers.votes);
+}
+	/*for(var i=0; i<onlineUsersVote.votes.length; i++) {
+		onlineUsersVote.votes[i] = false;
+		io.emit('curr_vote', false);
+	}
+	console.log(onlineUsersVote.votes);
+	}
+	*/
 
 //Returns the % of TRUE votes.
 //This is done by dividing the amount of TRUE votes with the number of online users.
 checkUsersVotes = function() {
+	var userAmount = onlineUsers.votes.length;
+	var trueVotes = 0;
+
+	for(var i=0; i<userAmount; i++) {
+		if(onlineUsers.votes[i] == true) {
+			trueVotes++;
+		}
+	}
+	return (trueVotes/userAmount);
+}
+
+	/*
 	var userAmount = onlineUsersVote.votes.length;
 	var trueVotes = 0;
 
@@ -79,11 +134,12 @@ checkUsersVotes = function() {
 		}
 	}
 	return (trueVotes/userAmount);
-}
+}	*/
 
 checkIfChangable = function(io) {
 	if(checkUsersVotes() > 0.5) {
 		io.emit('ext_clear');
+		setAllFalse(io);
 	}
 }
 

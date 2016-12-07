@@ -1,7 +1,18 @@
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
 
+var preview_canvas = document.getElementById('preview_canvas');
+var preview_ctx = preview_canvas.getContext("2d");
 
+var size = document.getElementById('size');
+var color = document.getElementById('color');
+
+window.addEventListener('mousedown', function(){
+	draw_preview()}, false);
+size.addEventListener("input", function(){
+	draw_preview()}, false);
+color.addEventListener("input", function(){
+	draw_preview()}, false);
 canvas.addEventListener("mousedown", function(e){
 	findMove('down', e)}, false);
 canvas.addEventListener("mousemove", function(e){
@@ -15,7 +26,6 @@ window.addEventListener('resize', function(e){
 window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
 
-
 var flag = false;
 var prevCordX = 0;
 var prevCordY = 0;
@@ -28,12 +38,26 @@ var dot_flag = false;
 var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
-var size = document.getElementById('size');
-var color = document.getElementById('color');
+
 var socket = io();
+
+socket.on('connect', function(){
+	draw_preview();
+});
 
 socket.on('ext_coordinates', function (data){
   draw_ext(data);
+});
+
+
+socket.on('latestCanvas', function(data){
+	var img = new Image;
+
+	img.onload = function(){
+		ctx.drawImage(img,0,0);
+	}
+
+	img.src = data;
 });
 
 socket.on('ext_clear', function(data) {
@@ -48,9 +72,9 @@ function draw_ext(data){
 	var sizeVal = data[0];
 	var colorVal = data[1];
 
-  for (var i = 2; i < data.length; i++) {
+  for (var i = 3; i < data.length; i++) {
 
-	var tmp = data[i];
+		var tmp = data[i];
     var prev_tmp = data[i-1];
 
   	var x, y, width, height;
@@ -63,7 +87,7 @@ function draw_ext(data){
   	width = height = (sizeVal/2);
 
     ctx.beginPath();
-	ctx.lineCap = "round";
+		ctx.lineCap = "round";
     ctx.moveTo(prev_x, prev_y);
     ctx.lineTo(curr_x, curr_y);
     ctx.lineWidth = sizeVal;
@@ -82,7 +106,7 @@ function findMove(res, e) {
 		newCordY = e.clientY - rect.top;
 
 		//Add brush color and size as first element in coordinates array.
-		coordinates.push(size.options[size.selectedIndex].value, color.options[color.selectedIndex].value)
+		coordinates.push(size.value, "#"+color.value);
 		flag = true;
 		dot_flag = true;
 
@@ -125,19 +149,35 @@ function findMove(res, e) {
 
 function draw() {
 	//Both these values will be sent to server
-	var sizeVal = size.options[size.selectedIndex].value;
-	var colorVal = color.options[color.selectedIndex].value;
+	var sizeVal = size.value;
+	var colorVal = "#"+color.value;
 
-    ctx.beginPath();
+  ctx.beginPath();
 	ctx.lineCap = "round";
-    ctx.moveTo(prevCordX, prevCordY);
-    ctx.lineTo(newCordX, newCordY);
-    ctx.lineWidth = sizeVal;
-    ctx.strokeStyle = colorVal;
-    ctx.stroke();
+  ctx.moveTo(prevCordX, prevCordY);
+  ctx.lineTo(newCordX, newCordY);
+  ctx.lineWidth = sizeVal;
+  ctx.strokeStyle = colorVal;
+  ctx.stroke();
 
+	draw_preview();
 }
 
+function draw_preview(){
+	preview_ctx.clearRect(0,0, preview_canvas.width, preview_canvas.height);
+	var sizeVal = size.value;
+	var colorVal = "#"+color.value;
+
+	x = preview_canvas.width /4;
+	y = preview_canvas.height /2;
+  preview_ctx.beginPath();
+	preview_ctx.lineCap = "round";
+  preview_ctx.moveTo(x, y);
+  preview_ctx.lineTo(x, y);
+  preview_ctx.lineWidth = sizeVal;
+  preview_ctx.strokeStyle = colorVal;
+  preview_ctx.stroke();
+}
 function scale_canvas(e){
   rect = canvas.getBoundingClientRect();
 }
@@ -145,4 +185,3 @@ function scale_canvas(e){
 function clearCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-

@@ -6,6 +6,8 @@ var io = require('socket.io')(server, {});
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
 
+//Reading and writing files
+var fs = require('fs');
 
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
@@ -25,18 +27,47 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 
-//Standard syntax for socket (type(drawControl or userSocket) {data});
-socket.on('drawControl', function(data){
-//skicka data till modul drawfunctions
-	draw_Control.drawFunctions(data, socket, io);
+
+	//Standard syntax for socket (type(drawControl or userSocket) {data});
+	socket.on('drawControl', function(data){
+	//skicka data till modul drawfunctions
+		draw_Control.drawFunctions(data, socket, io);
+	});
+
+	socket.on('userControl', function(data){
+		user_Control.userFunctions(data, socket, io);
+	});
+
+	socket.on('disconnect', function(){
+		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+	});
+
+	socket.on('wantCanvas', function(){
+		//UNCOMMENT THIS LATER
+		//socket.emit('latestCanvas', draw_Control.getServerCanvas());
+	});
+
 });
 
-socket.on('userControl', function(data){
-	user_Control.userFunctions(data, socket, io);
-});
-	
-socket.on('disconnect', function(){
-	user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
-});
+//Save server's canvas dataURL(string) locally on server
+function save_canvas(){
+	fs.writeFile("./canvasDataURL.txt", draw_Control.getServerCanvas(), function(err) {
+	    if(err) {
+	        return console.log(err);
+	    }
+	});
+}
 
-});
+//Returns server's stored canvas dataURL (string)
+function read_canvas(){
+ var canvas_dataURL;
+	try{
+		canvas_dataURL = fs.readFileSync('./canvasDataURL.txt','utf8');
+
+	}catch(err) {
+		console.log(err);
+		return;
+	}
+
+	return canvas_dataURL;
+}

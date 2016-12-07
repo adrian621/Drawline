@@ -3,26 +3,27 @@
 	<head>
 		<title>Drawline</title>
 		<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+		<script src="../scripts/jscolor.js"></script>
 	</head>
 
 	<body>
 		<h1 id = "Header"> Drawline </h1>
 		<div id="container">
-
-		<div id = "usersVotes">
-				<div id = "userOwnVote">
-					<p> You have voted </p> <p id=specificUserVote></p>
-					<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
-				</div>
-				<div id = "procentOfTrueVotes">
-					<!-- <p> Current procent of votes for clearing canvas </p> -->
-					<p id=prcForClear></p>
-				</div>
-			</div>
-
 			<div id = "usersDiv">
-				<p id = "usersHeader">Online Users</p>
-				<ul id = onlineUsersList></ul>
+				<div id = "usersVotes">
+						<div id = "userOwnVote">
+							<p> You have voted </p> <p id=specificUserVote></p>
+							<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+						</div>
+						<div id = "procentOfTrueVotes">
+							<!-- <p> Current procent of votes for clearing canvas </p> -->
+							<p id=prcForClear></p>
+						</div>
+				</div>
+					<div id = "users">
+					<p id = "usersHeader">Online Users</p>
+					<ul id = onlineUsersList></ul>
+				</div>
 			</div>
 
 			<div id ="content">
@@ -31,35 +32,30 @@
 
 			<div id="controlDiv">
 				<div id="sizeDiv">
-					<p> Color </p>
-					<select id="size">
-						<option value="2">2</option>
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="30">30</option>
-					</select>
-				</div>
-				<div id="colorDiv">
 					<p> Size </p>
-					<select id="color">
-						<option value="red">Red</option>
-						<option value="black">Black</option>
-						<option value="pink">Pink</option>
-					</select>
+					<input type="range" id="size" min="2" value="10" max="30" step="2">
 				</div>
+
+				<canvas id = "preview_canvas"></canvas>
+
+				<div id="colorDiv">
+					<p> Color </p>
+					<input id = "color" class="jscolor" value="ab2567">
+				</div>
+
 			</div>
 		</div>
 	</body>
 	<script src = "/socket.io/socket.io.js"></script>
 
 	<script>
-	    socket.on('connect', function(data) {
-	    var socket = io();
+	  	var socket = io();
 
 	    socket.on('connect', function(data) {
-	        socket.emit('join', 'Hello World from client');
+				socket.emit('wantCanvas');
 	    });
+
+
 	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>

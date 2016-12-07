@@ -1,3 +1,5 @@
+var socket = io();
+
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
 
@@ -6,6 +8,8 @@ var preview_ctx = preview_canvas.getContext("2d");
 
 var size = document.getElementById('size');
 var color = document.getElementById('color');
+
+var dBut = document.getElementById("downloadBut");
 
 window.addEventListener('mousedown', function(){
 	draw_preview()}, false);
@@ -25,6 +29,7 @@ window.addEventListener('resize', function(e){
   scale_canvas(e)}, false);
 window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
+dBut.addEventListener('click', dlCanvas, false);
 
 var flag = false;
 var prevCordX = 0;
@@ -39,9 +44,16 @@ var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
 
-var socket = io();
+
+function dlCanvas() {
+	canvas.toBlob(function(blob) {
+			saveAs(blob, "output.png");
+	}, "image/png");
+};
 
 socket.on('connect', function(){
+	initCanvas();
+	socket.emit('wantCanvas');
 	draw_preview();
 });
 
@@ -180,4 +192,9 @@ function scale_canvas(e){
 
 function clearCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function initCanvas() {
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,600,600);
 }

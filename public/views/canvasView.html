@@ -4,10 +4,15 @@
 		<title>Drawline</title>
 		<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
 		<script src="../scripts/jscolor.js"></script>
+		<script src="https://rawgit.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
+		<script src ="https://rawgit.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"></script>
 	</head>
 
 	<body>
 		<h1 id = "Header"> Drawline </h1>
+		<div id="downloadContainer">
+			<input id="downloadBut" value="Download painting" type="button"></input>
+		</div>
 		<div id="container">
 			<div id = "usersDiv">
 				<div id = "usersVotes">
@@ -47,16 +52,6 @@
 		</div>
 	</body>
 	<script src = "/socket.io/socket.io.js"></script>
-
-	<script>
-	  	var socket = io();
-
-	    socket.on('connect', function(data) {
-				socket.emit('wantCanvas');
-	    });
-
-
-	</script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>
 

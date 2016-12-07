@@ -1,4 +1,4 @@
-#canvas{border:1px solid black; display:block;margin:auto;}
+#canvas{border:1px solid black; display:block;margin:auto;background-color:white;}
 #buttons{text-align:center;}
 #controlDiv{flex:1;}
 #sizeDiv{display:inline-block;}
@@ -13,6 +13,8 @@
 #usersVotes{flex:1;display:inline-block;}
 #users{flex:1;display:inline-block;}
 #preview_canvas{text-align:center;}
+#downloadContainer{text-align:center;}
+#downloadBut{}
 
 li{margin-bottom:10%;; /* limit width */}
 

@@ -12,15 +12,19 @@ user_Control.userFunctions = function(data, socket, io){
 				break;
 
 			case 'userChange':
-				changeUserVote(socket);
+				changeUserVote(socket, io);
 				checkUsersVotes();
 				//Finns nog bättre ställe att sätta den:
-				checkIfChangable(io);
+				checkIfChangable(io, socket);
+				break;
+
+			case 'wantVoteStats':
+				//send vote statistics
+				socket.emit('voteStats', checkUsersVotes());
 				break;
 
 			case 'userDisconnect':
 				removeFromUserList(socket, io);
-				removeUserVote(socket);
 				break;
 			}
 }
@@ -42,19 +46,12 @@ initUserVote = function(socket) {
 	//onlineUsersVote.votes.push(false);
 	onlineUsers.votes.push(false);
 	socket.emit('curr_vote', false);
-	console.log(onlineUsers.votes);
+	//console.log(onlineUsers.votes);
 	//console.log(onlineUsersVote.votes);
 }
 
 
-removeUserVote = function(socket) {
-	for (var i = 0; i < onlineUsers.votes.length; i++) {
-		if(onlineUsers.ids[i] == socket.id) {
-			onlineUsers.votes.splice(i,1);
-			console.log(onlineUsers.votes);
-			return;
-		}
-	}
+
 	/*
 	for (var i = 0; i < onlineUsersVote.votes.length; i++) {
 		if(onlineUsersVote.ids[i] == socket.id) {
@@ -65,17 +62,22 @@ removeUserVote = function(socket) {
 		}
 	}
 	*/
-}
 
-changeUserVote = function(socket) {
+
+changeUserVote = function(socket, io) {
+
+
 	//Go through all users and find the one who changes their mind.
 	for (var i = 0; i < onlineUsers.votes.length; i++) {
 		//When the user is find change the vote to the opposite of what it is.
 		if(onlineUsers.ids[i] == socket.id) {
 			onlineUsers.votes[i] = !onlineUsers.votes[i];
 			socket.emit('curr_vote', onlineUsers.votes[i]);
-			console.log(onlineUsers.userNames);
-			console.log(onlineUsers.votes);
+		//	console.log(onlineUsers.userNames);
+		//	console.log(onlineUsers.votes);
+
+			io.emit('voteStats', checkUsersVotes());
+
 			return;
 		}
 	}
@@ -100,7 +102,6 @@ setAllFalse = function(io) {
 		onlineUsers.votes[i] = false;
 		io.emit('curr_vote', false);
 	}
-	console.log(onlineUsers.votes);
 }
 	/*for(var i=0; i<onlineUsersVote.votes.length; i++) {
 		onlineUsersVote.votes[i] = false;
@@ -121,8 +122,13 @@ checkUsersVotes = function() {
 			trueVotes++;
 		}
 	}
+
+	if(trueVotes/userAmount == null)
+		return 0;
+
 	return (trueVotes/userAmount);
 }
+
 
 	/*
 	var userAmount = onlineUsersVote.votes.length;
@@ -138,8 +144,9 @@ checkUsersVotes = function() {
 
 checkIfChangable = function(io) {
 	if(checkUsersVotes() > 0.5) {
-		io.emit('ext_clear');
 		setAllFalse(io);
+		io.emit('ext_clear');
+		io.emit('voteStats', checkUsersVotes());
 	}
 }
 
@@ -147,17 +154,17 @@ checkIfChangable = function(io) {
 
 addToUserList = function(data, socket){
 	onlineUsers.userNames.push(data.username);
-	console.log(onlineUsers.userNames);
+	//console.log(onlineUsers.userNames);
 	onlineUsers.ids.push(socket.id);
 }
 
 removeFromUserList = function(data, io){
-	for (var i = 0; i < onlineUsers.userNames.length; i++) {		
+	for (var i = 0; i < onlineUsers.userNames.length; i++) {
 		if (onlineUsers.ids[i] == data.id) {
 			 //console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
 			 onlineUsers.ids.splice(i, 1);
 			 onlineUsers.userNames.splice(i, 1);
-			 console.log(onlineUsers.userNames);
+			 onlineUsers.votes.splice(i,1);
 			 io.emit('onlineUsers', {users:onlineUsers.userNames});
 			 return;
 		}

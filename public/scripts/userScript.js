@@ -1,5 +1,6 @@
 //Code for Voting-button
 var vote_button = document.getElementById('voteButtonID');
+
 vote_button.addEventListener("click", function() {
 	socket.emit('userControl', {type:'userChange'});
 });
@@ -8,6 +9,11 @@ vote_button.addEventListener("click", function() {
 var prcForClear = document.createElement('prcForClear');
 var intPrcForClear = document.createTextNode("0");
 prcForClear.appendChild(intPrcForClear);
+
+//Visa på sidan hur många % har röstat för att cleara canvas
+socket.on('voteStats', function(data){
+	document.getElementById("vStats").value = data*100;
+});
 
 //Hämta ut parameter
 getUserName = function(){

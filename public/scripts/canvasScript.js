@@ -54,6 +54,7 @@ function dlCanvas() {
 socket.on('connect', function(){
 	initCanvas();
 	socket.emit('wantCanvas');
+	socket.emit('wantVoteStats');
 	draw_preview();
 });
 
@@ -73,11 +74,14 @@ socket.on('latestCanvas', function(data){
 });
 
 socket.on('ext_clear', function(data) {
-	clearCanvas(data);
+	clearCanvas();
 });
 
 socket.on('curr_vote', function(data) {
-	document.getElementById('specificUserVote').innerHTML = data.toString();
+	if(data)
+		document.getElementById('specificUserVote').innerHTML = "Yes!";
+	else if(!data)
+		document.getElementById('specificUserVote').innerHTML = "No!";
 });
 
 function draw_ext(data){

@@ -17,8 +17,12 @@
 			<div id = "usersDiv">
 				<div id = "usersVotes">
 						<div id = "userOwnVote">
-							<p> You have voted </p> <p id=specificUserVote></p>
-							<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+							<p id="clearQ"> Clear painting? </p>
+							<progress id="vStats" max="100"></progress>
+							<div id="voteContainer">
+								<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+							</div>
+							<p id="specificUserVote"></p>
 						</div>
 						<div id = "procentOfTrueVotes">
 							<!-- <p> Current procent of votes for clearing canvas </p> -->

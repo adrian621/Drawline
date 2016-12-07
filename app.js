@@ -47,6 +47,10 @@ console.log('client connected');
 		//socket.emit('latestCanvas', draw_Control.getServerCanvas());
 	});
 
+	socket.on('wantVoteStats', function(){
+		user_Control.userFunctions({type: 'wantVoteStats'}, socket, io);
+	})
+
 });
 
 //Save server's canvas dataURL(string) locally on server

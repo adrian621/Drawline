@@ -47,14 +47,13 @@ var rect = canvas.getBoundingClientRect();
 
 function dlCanvas() {
 	canvas.toBlob(function(blob) {
-			saveAs(blob, "output.png");
-	}, "image/png");
+			saveAs(blob, "output.jpeg");
+	}, "image/jpeg");
 };
 
 socket.on('connect', function(){
 	initCanvas();
 	socket.emit('wantCanvas');
-	socket.emit('wantVoteStats');
 	draw_preview();
 });
 

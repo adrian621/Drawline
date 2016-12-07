@@ -9,6 +9,8 @@ user_Control.userFunctions = function(data, socket, io){
 				initUserVote(socket);
 				//send new userList to all clients
 				io.emit('onlineUsers', {users:onlineUsers.userNames});
+				//send new vote stats to all clients
+				io.emit('voteStats', checkUsersVotes());
 				break;
 
 			case 'userChange':
@@ -16,11 +18,6 @@ user_Control.userFunctions = function(data, socket, io){
 				checkUsersVotes();
 				//Finns nog bättre ställe att sätta den:
 				checkIfChangable(io, socket);
-				break;
-
-			case 'wantVoteStats':
-				//send vote statistics
-				socket.emit('voteStats', checkUsersVotes());
 				break;
 
 			case 'userDisconnect':
@@ -65,8 +62,6 @@ initUserVote = function(socket) {
 
 
 changeUserVote = function(socket, io) {
-
-
 	//Go through all users and find the one who changes their mind.
 	for (var i = 0; i < onlineUsers.votes.length; i++) {
 		//When the user is find change the vote to the opposite of what it is.

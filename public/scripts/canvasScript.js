@@ -138,7 +138,7 @@ function findMove(res, e) {
 		//Send coordinates to server when user lets go of mouse
 		res = 'up';
 	  	//* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
-	 	 socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+	 	socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 		//Clear coordinates
 		coordinates = [];
 
@@ -157,6 +157,13 @@ function findMove(res, e) {
 		//Save mouse coordinates to send to server
 		coord_tuple = [newCordX, newCordY];
 		coordinates.push(coord_tuple);
+
+		if(coordinates.length > 50){
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			coordinates = [];
+			coordinates.push(size.value, "#"+color.value);
+			coordinates.push(coord_tuple);
+		}
 
 		draw();
 	}

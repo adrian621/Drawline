@@ -1,4 +1,4 @@
-#canvas{border:1px solid black; display:block;margin:auto;background-color:white;}
+#canvas{border:1px solid black; display:block;margin:auto;background-color:white; cursor:url(RedBrush.gif) 5 23, auto;}
 #buttons{text-align:center;}
 #controlDiv{flex:1;}
 #sizeDiv{display:inline-block;}

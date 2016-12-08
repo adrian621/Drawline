@@ -18,7 +18,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 	switch (data.type) {
 		case 'coordinates':
 			if(controlValidCordinates(data.coord_data)){
-				socket.broadcast.emit('ext_coordinates', data.coord_data);
+				io.emit('ext_coordinates', data.coord_data);
 			}
 			else{
 			//socket.emit('remove last sent', data.coord_data);

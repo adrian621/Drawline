@@ -148,10 +148,28 @@ checkIfChangable = function(io) {
 // ************ FUNCTIONS FOR HANDLING USERNAMES AND IDS ***************************
 
 addToUserList = function(data, socket){
-	onlineUsers.userNames.push(data.username);
+	username = checkUserNameValidity(data.username);
+	onlineUsers.userNames.push(username);
 	//console.log(onlineUsers.userNames);
 	onlineUsers.ids.push(socket.id);
+	
 }
+
+checkUserNameValidity = function(username){
+console.log(username);
+	if(username === undefined || username === null || username === ""){
+	return "guest";	
+	}
+	if(username.length > 10){
+	return username.substring(0,10);
+	}
+	else{ 
+	return username;
+}
+		
+	
+}
+
 
 removeFromUserList = function(data, io){
 	for (var i = 0; i < onlineUsers.userNames.length; i++) {

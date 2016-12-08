@@ -152,22 +152,22 @@ addToUserList = function(data, socket){
 	onlineUsers.userNames.push(username);
 	//console.log(onlineUsers.userNames);
 	onlineUsers.ids.push(socket.id);
-	
+
 }
 
 checkUserNameValidity = function(username){
 console.log(username);
 	if(username === undefined || username === null || username === ""){
-	return "guest";	
+		return "guest";
 	}
 	if(username.length > 10){
-	return username.substring(0,10);
+		return username.substring(0,10);
 	}
-	else{ 
-	return username;
-}
-		
-	
+	else{
+		return username;
+	}
+
+
 }
 
 

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
   "engines": {
-      "node": "6.9.1"
+      "node": "7.2.1"
     }
   },
   "repository": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "socket.io": "*",
     "express": "*",
-    "canvas": "1.2.x"
+    "canvas": "*"
     },
   "bugs": {
     "url": "https://github.com/adty3240/Drawline/issues"

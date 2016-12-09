@@ -44,7 +44,7 @@ console.log('client connected');
 
 	socket.on('wantCanvas', function(){
 		//UNCOMMENT THIS LATER
-		//socket.emit('latestCanvas', draw_Control.getServerCanvas());
+		socket.emit('latestCanvas', draw_Control.getServerCanvas());
 	});
 
 	socket.on('wantVoteStats', function(){

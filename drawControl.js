@@ -6,7 +6,7 @@
 var draw_Control = module.exports = {};
 
 //UNCOMMENT THIS LATER
-//var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
+var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
 
 
 draw_Control.getServerCanvas = function(){
@@ -24,7 +24,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 			//socket.emit('remove last sent', data.coord_data);
 			}
 			//UNCOMMENT THIS LATER
-			//drawServerCanvas(data.coord_data);
+			drawServerCanvas(data.coord_data);
 			break;
 			/*
 		case 'clearCanvas':

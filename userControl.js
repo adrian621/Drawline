@@ -12,7 +12,7 @@ user_Control.userFunctions = function(data, socket, io){
 				//send new vote stats to all clients
 				io.emit('voteStats', checkUsersVotes());
 				break;
-
+			
 			case 'userChange':
 				changeUserVote(socket, io);
 				checkUsersVotes();

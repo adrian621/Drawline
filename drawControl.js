@@ -12,14 +12,15 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 	switch (data.type) {
 		case 'coordinates':
+			
 			if(controlValidCordinates(data.coord_data)){
 				io.emit('ext_coordinates', data.coord_data);
 				drawServerCanvas(data.coord_data);
 			}
 			else{
-			console.log("cheeeeeeeeeeeeeeeeeeater");		
-			socket.emit('latestCanvas', canvas.toDataURL());			
-			}			
+			
+			}	
+					
 			break;
 			case 'wantCanvas':
 			socket.emit('latestCanvas', canvas.toDataURL());
@@ -73,6 +74,9 @@ controlValidCordinates = function(data){
 	if(checkValidSize(sizeVal) && checkValidCords(coordinates)){
 		return true;
 	}
+	else	{	
+			socket.emit('latestCanvas', canvas.toDataURL());
+		}
 }
 
 //check that everything is defined

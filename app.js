@@ -8,7 +8,7 @@ var user_Control = require('./userControl');
 
 //Reading and writing files
 var fs = require('fs');
-
+var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -20,6 +20,10 @@ app.get('*', function(req, res){
 	res.sendFile(__dirname + '/public/views/' + file);
 });
 
+//Read local server canvas at server startup
+server.on('listening', function () {
+    read_canvas();
+});
 //Set up server to listen to port 2000
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
@@ -44,26 +48,30 @@ console.log('client connected');
 
 });
 
+//Save server canvas locally every 10 second
+setInterval(function(){
+	 save_canvas();
+	 //read_canvas();
+ }, 10000);
 
 //Save server's canvas dataURL(string) locally on server
 function save_canvas(){
-	fs.writeFile("./canvasDataURL.txt", draw_Control.getServerCanvas(), function(err) {
-	    if(err) {
-	        return console.log(err);
-	    }
+	fs.writeFile('./canvasDataURL.txt', draw_Control.getServerCanvas(), (err) => {
+  	if (err) throw err;
+  console.log('Wrote to canvasDataURL.txt');
 	});
 }
 
-//Returns server's stored canvas dataURL (string)
+//Sets server's canvas to canvasDataURL.txt. Used if restarting server/crash
 function read_canvas(){
- var canvas_dataURL;
-	try{
-		canvas_dataURL = fs.readFileSync('./canvasDataURL.txt','utf8');
 
-	}catch(err) {
-		console.log(err);
-		return;
-	}
+  fs.readFile('./canvasDataURL.txt', 'utf-8',  function (err, data) {
+    if (err) throw err;
 
-	return canvas_dataURL;
+		if(data != undefined ){
+	    console.log('Read canvasDataURL.txt');
+			draw_Control.drawFunctions({type: 'serverStart', coord_data: data}, 0, io, 0);
+
+		}
+  });
 }

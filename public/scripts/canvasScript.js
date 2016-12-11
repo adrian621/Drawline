@@ -63,11 +63,7 @@ socket.on('ext_coordinates', function (data){
 
 
 socket.on('latestCanvas', function(data){
-	
-
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	var img = new Image;
 
 	img.onload = function(){

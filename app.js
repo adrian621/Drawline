@@ -8,7 +8,7 @@ var user_Control = require('./userControl');
 
 //Reading and writing files
 var fs = require('fs');
-var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
+
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
@@ -66,7 +66,7 @@ function save_canvas(){
 function read_canvas(){
 
   fs.readFile('./canvasDataURL.txt', 'utf-8',  function (err, data) {
-    if (err) throw err;
+    if (err) console.log(err);
 
 		if(data != undefined ){
 	    console.log('Read canvasDataURL.txt');

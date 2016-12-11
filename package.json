@@ -17,7 +17,6 @@
   "author": "adrian",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "canvas": "^1.6.2",
     "express": "^4.14.0",
     "socket.io": "^1.7.1"
   },

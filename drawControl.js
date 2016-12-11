@@ -1,11 +1,6 @@
 //This module will handle all operations of the board.
-	// TODO //
-//get data from users
-//control valid
-//send to other clients
 var draw_Control = module.exports = {};
 
-//UNCOMMENT THIS LATER
 var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d');
 
 
@@ -19,13 +14,17 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		case 'coordinates':
 			if(controlValidCordinates(data.coord_data)){
 				io.emit('ext_coordinates', data.coord_data);
+				drawServerCanvas(data.coord_data);
 			}
 			else{
-			//socket.emit('remove last sent', data.coord_data);
+			console.log("cheeeeeeeeeeeeeeeeeeater");
+			socket.emit('latestCanvas', canvas.toDataURL());
 			}
-			//UNCOMMENT THIS LATER
-			drawServerCanvas(data.coord_data);
 			break;
+			case 'wantCanvas':
+			socket.emit('latestCanvas', canvas.toDataURL());
+			break;
+
 			/*
 		case 'clearCanvas':
 			socket.broadcast.emit('ext_clear');

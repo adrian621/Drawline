@@ -42,16 +42,8 @@ console.log('client connected');
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	});
 
-	socket.on('wantCanvas', function(){
-		//UNCOMMENT THIS LATER
-		socket.emit('latestCanvas', draw_Control.getServerCanvas());
-	});
-
-	socket.on('wantVoteStats', function(){
-		user_Control.userFunctions({type: 'wantVoteStats'}, socket, io);
-	})
-
 });
+
 
 //Save server's canvas dataURL(string) locally on server
 function save_canvas(){

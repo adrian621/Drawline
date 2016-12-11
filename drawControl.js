@@ -23,7 +23,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		break;
 
 		case 'coordinates':
-			if(controlValidCordinates(data.coord_data)){
+			if(controlValidCordinates(data.coord_data, socket)){
 				io.emit('ext_coordinates', data.coord_data);
 				drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
 			}
@@ -79,7 +79,7 @@ function drawServerCanvas(data){
 }
 
 //check validity
-controlValidCordinates = function(data){
+controlValidCordinates = function(data, socket){
 	if(!checkDef(data)){
 	return false;
 	}

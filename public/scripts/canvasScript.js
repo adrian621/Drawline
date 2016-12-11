@@ -53,7 +53,7 @@ function dlCanvas() {
 
 socket.on('connect', function(){
 	initCanvas();
-	socket.emit('wantCanvas');
+	socket.emit('drawControl',{type:'wantCanvas'});
 	draw_preview();
 });
 
@@ -63,6 +63,11 @@ socket.on('ext_coordinates', function (data){
 
 
 socket.on('latestCanvas', function(data){
+	
+
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
 	var img = new Image;
 
 	img.onload = function(){

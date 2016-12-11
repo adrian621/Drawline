@@ -89,26 +89,16 @@ function draw_ext(data){
 	var colorVal = data[1];
 
   for (var i = 3; i < data.length; i++) {
-
-		var tmp = data[i];
-    var prev_tmp = data[i-1];
-
-  	var x, y, width, height;
-  	curr_x = tmp[0];
-  	curr_y = tmp[1];
-
-    prev_x = prev_tmp[0];
-    prev_y = prev_tmp[1];
-
-  	width = height = (sizeVal/2);
-
-    ctx.beginPath();
-		ctx.lineCap = "round";
-    ctx.moveTo(prev_x, prev_y);
-    ctx.lineTo(curr_x, curr_y);
-    ctx.lineWidth = sizeVal;
-    ctx.strokeStyle = colorVal;
-    ctx.stroke();
+	prev_temp_data = data[i-1];
+	temp_data = data[i];
+	  
+	ctx.beginPath();
+	ctx.lineCap = "round";
+	ctx.moveTo(prev_temp_data[0], prev_temp_data[1]);
+	ctx.lineTo(temp_data[0], temp_data[1]);
+	ctx.lineWidth = sizeVal;
+	ctx.strokeStyle = colorVal;
+	ctx.stroke();
   }
 }
 function findMove(res, e) {
@@ -123,6 +113,8 @@ function findMove(res, e) {
 
 		//Add brush color and size as first element in coordinates array.
 		coordinates.push(size.value, "#"+color.value);
+		frst_coord_tuple = [newCordX, newCordY];
+		coordinates.push(frst_coord_tuple);
 		flag = true;
 		dot_flag = true;
 

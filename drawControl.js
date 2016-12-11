@@ -29,8 +29,8 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 			}
 			break;
 
-			case 'wantCanvas':
-				socket.emit('latestCanvas', canvas.toDataURL());
+		case 'wantCanvas':
+			socket.emit('latestCanvas', canvas.toDataURL());
 			break;
 		default:
 			break;
@@ -87,6 +87,9 @@ controlValidCordinates = function(data){
 	if(checkValidSize(sizeVal) && checkValidCords(coordinates)){
 		return true;
 	}
+	else	{
+			socket.emit('latestCanvas', canvas.toDataURL());
+		}
 }
 
 //check that everything is defined

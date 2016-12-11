@@ -12,7 +12,7 @@ user_Control.userFunctions = function(data, socket, io){
 				//send new vote stats to all clients
 				io.emit('voteStats', checkUsersVotes());
 				break;
-			
+
 			case 'userChange':
 				changeUserVote(socket, io);
 				checkUsersVotes();
@@ -152,22 +152,22 @@ addToUserList = function(data, socket){
 	onlineUsers.userNames.push(username);
 	//console.log(onlineUsers.userNames);
 	onlineUsers.ids.push(socket.id);
-	
+
 }
 
 checkUserNameValidity = function(username){
 console.log(username);
 	if(username === undefined || username === null || username === ""){
-	return "guest";	
+	return "guest";
 	}
 	if(username.length > 10){
 	return username.substring(0,10);
 	}
-	else{ 
+	else{
 	return username;
 }
-		
-	
+
+
 }
 
 

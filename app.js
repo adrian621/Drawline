@@ -45,11 +45,6 @@ console.log('client connected');
 	socket.on('disconnect', function(){
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	});
-
-	socket.on('down',function(data){
-		console.log(data);
-		console.log("ey");
-	});
 });
 
 //Save server canvas locally every 10 second

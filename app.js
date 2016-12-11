@@ -56,7 +56,7 @@ setInterval(function(){
 
 //Save server's canvas dataURL(string) locally on server
 function save_canvas(){
-	fs.writeFile('./canvasDataURL.txt', draw_Control.getServerCanvas(), (err) => {
+	fs.writeFile('./canvasDataURL.txt', draw_Control.getServerCanvas(), function (err) {
   	if (err) throw err;
   console.log('Wrote to canvasDataURL.txt');
 	});

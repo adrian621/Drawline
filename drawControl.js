@@ -11,6 +11,10 @@ draw_Control.setServerCanvas = function(data){
 	canvas = data;
 }
 
+draw_Control.clearCanvas = function(){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
 draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 	switch (data.type) {
@@ -63,6 +67,7 @@ function drawServerCanvas(data){
 	}
 
 	if(data.type == 'serverStart'){
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		var img = new Image;
 
 		img.onload = function(){

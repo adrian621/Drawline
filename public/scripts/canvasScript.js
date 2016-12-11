@@ -129,9 +129,10 @@ function findMove(res, e) {
 		if(dot_flag) {
 			ctx.beginPath();
 			ctx.fillStyle = "black";
-			ctx.fillRect = (newCordX, newCordY, size, size);
+			ctx.fillRect = (newCordX, newCordY, size.value, size.value);
 			ctx.closePath();
 			dot_flag = false;
+			coordinates.push([newCordX, newCordY]);
 		}
 	}
 

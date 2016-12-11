@@ -23,10 +23,6 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 				io.emit('ext_coordinates', data.coord_data);
 				drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
 			}
-			else{
-				console.log("cheeeeeeeeeeeeeeeeeeater");
-				socket.emit('latestCanvas', canvas.toDataURL());
-			}
 			break;
 
 		case 'wantCanvas':

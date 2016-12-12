@@ -6,10 +6,35 @@
 		<script src="../scripts/jscolor.js"></script>
 		<script src="https://rawgit.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
 		<script src ="https://rawgit.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="http://bulma.io/css/bulma-docs.css">
 	</head>
 
 	<body>
-		<h1 id = "Header"> Drawline </h1>
+		<div id="mySidenav" class="sidenav">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<p> Size </p>
+		  <input type="range" id="size" min="2" value="10" max="30" step="2">
+			<div id="colorDiv">
+			  <p>Color</p>
+			  <input id = "color" class="jscolor" value="ab2567">
+			</div>
+			<progress id="vStats" max="100"></progress>
+			<p id="specificUserVote"></p>
+			<div id="voteContainer"> <input id = "voteButtonID" class="button is-primary"type = "button" value = "Change vote" name = "vote_button"></div>
+			<div id="usersDiv">
+				<p id = "usersHeader">Online Users</p>
+				<ul id = onlineUsersList></ul>
+			</div>
+		</div>
+
+		<!-- Use any element to open the sidenav -->
+		<button id="menu" class="button is-primary"onclick="openNav()">Menu</button>
+
+		<canvas id="canvas"></canvas>
+
+
+		<!-- <h1 id = "Header"> Drawline </h1>
 		<div id="downloadContainer">
 			<input id="downloadBut" value="Download painting" type="button"></input>
 		</div>
@@ -25,7 +50,6 @@
 							<p id="specificUserVote"></p>
 						</div>
 						<div id = "procentOfTrueVotes">
-							<!-- <p> Current procent of votes for clearing canvas </p> -->
 							<p id=prcForClear></p>
 						</div>
 				</div>
@@ -33,10 +57,6 @@
 					<p id = "usersHeader">Online Users</p>
 					<ul id = onlineUsersList></ul>
 				</div>
-			</div>
-
-			<div id ="content">
-				<canvas id="canvas" width="600" height="600"></canvas>
 			</div>
 
 			<div id="controlDiv">
@@ -53,8 +73,11 @@
 				</div>
 
 			</div>
-		</div>
+		</div> -->
 	</body>
+	<script>
+
+	</script>
 	<script src = "/socket.io/socket.io.js"></script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>

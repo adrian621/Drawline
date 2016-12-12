@@ -2,6 +2,8 @@
 //Hämtar Användarnamnet som skirvits i formen och skickar detta till canvasView.html
 //via URLen. Användarnamnet extraktas i userscript som körs i canvasView.html.
 
+/*
+
 window.onload=function() {
   document.getElementById("nameFormId").onsubmit=function() {
 	var userName = "Guest"
@@ -14,3 +16,5 @@ window.onload=function() {
     return false;
   }
 }
+*/
+

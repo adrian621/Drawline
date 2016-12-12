@@ -1,15 +1,12 @@
 //This module will handle all operations of the board.
 var draw_Control = module.exports = {};
 
-var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d'), Image = Canvas.Image;
+var Canvas = require('canvas'), canvas = new Canvas(1,1), ctx = canvas.getContext('2d'), Image = Canvas.Image;
 
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
 
-draw_Control.setServerCanvas = function(data){
-	canvas = data;
-}
 
 draw_Control.clearCanvas = function(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -23,14 +20,14 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		break;
 
 		case 'coordinates':
-			if(controlValidCordinates(data.coord_data, socket)){
-				io.emit('ext_coordinates', data.coord_data);
-				drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
-			}
+		//  if(controlValidCordinates(data.coord_data, socket)){
+		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
+		//  }
 			break;
 
 		case 'wantCanvas':
-			socket.emit('latestCanvas', canvas.toDataURL());
+			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 			break;
 		default:
 			break;
@@ -42,24 +39,34 @@ function drawServerCanvas(data){
 	if(data.type == 'coordData'){
 		var sizeVal = data.cnv_data[0];
 		var colorVal = data.cnv_data[1];
-	  for (var i = 3; i < data.cnv_data.length; i++) {
 
+		var width = data.resolution[0];
+		var height = data.resolution[1];
+
+		var scaleX = canvas.width/width;
+		var scaleY = canvas.height/height;
+
+		//Let server's canvas grow dynamically as it receives coordinates
+		if(width > canvas.width)
+			canvas.width = width;
+
+		if(height > canvas.height)
+			canvas.height = height;
+
+	  for (var i = 3; i < data.cnv_data.length; i++) {
 			var tmp = data.cnv_data[i];
 	    var prev_tmp = data.cnv_data[i-1];
 
-	  	var x, y, width, height;
-	  	curr_x = tmp[0];
-	  	curr_y = tmp[1];
+	  	curr_x = tmp[0] * scaleX;
+	  	curr_y = tmp[1] * scaleY;
 
 			//LÄGG TILL I VALIDCOORDCHECK
-			console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+			//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
 			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
 				return;
 
-	    prev_x = prev_tmp[0];
-	    prev_y = prev_tmp[1];
-
-	  	width = height = (sizeVal/2);
+	    prev_x = prev_tmp[0]*scaleX;
+	    prev_y = prev_tmp[1]*scaleY;
 
 	    ctx.beginPath();
 			ctx.lineCap = "round";
@@ -76,10 +83,13 @@ function drawServerCanvas(data){
 		var img = new Image;
 
 		img.onload = function(){
+			canvas.width = img.width;
+			canvas.height = img.height;
 			ctx.drawImage(img,0,0);
 		}
 
 		img.src = data.cnv_data;
+
 	}
 }
 
@@ -94,7 +104,7 @@ controlValidCordinates = function(data, socket){
 		return true;
 	}
 	else	{
-			socket.emit('latestCanvas', canvas.toDataURL());
+			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 		}
 }
 

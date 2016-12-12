@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drawline</title>
+		<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+		<script src="../scripts/jscolor.js"></script>
+		<script src="https://rawgit.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
+		<script src ="https://rawgit.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"></script>
+	</head>
+
+	<body>
+		<h1 id = "Header"> Drawline </h1>
+		<div id="downloadContainer">
+			<input id="downloadBut" value="Download painting" type="button"></input>
+		</div>
+		<div id="container">
+			<div id = "usersDiv">
+				<div id = "usersVotes">
+						<div id = "userOwnVote">
+							<p id="clearQ"> Clear painting? </p>
+							<progress id="vStats" max="100"></progress>
+							<div id="voteContainer">
+								<input id = "voteButtonID" type = "button" value = "Change vote" name = "vote_button">
+							</div>
+							<p id="specificUserVote"></p>
+						</div>
+						<div id = "procentOfTrueVotes">
+							<!-- <p> Current procent of votes for clearing canvas </p> -->
+							<p id=prcForClear></p>
+						</div>
+				</div>
+					<div id = "users">
+					<p id = "usersHeader">Online Users</p>
+					<ul id = onlineUsersList></ul>
+				</div>
+			</div>
+
+			<div id ="content">
+				<canvas id="canvas" width="600" height="600"></canvas>
+			</div>
+
+			<div id="controlDiv">
+				<div id="sizeDiv">
+					<p> Size </p>
+					<input type="range" id="size" min="2" value="10" max="30" step="2">
+				</div>
+
+				<canvas id = "preview_canvas"></canvas>
+
+				<div id="colorDiv">
+					<p> Color </p>
+					<input id = "color" class="jscolor" value="ab2567">
+				</div>
+
+			</div>
+		</div>
+	</body>
+			<script>
+				var username = JSON.parse('<%- username %>');
+		</script>	
+		
+	<script src = "/socket.io/socket.io.js"></script>
+	<script src= "../scripts/canvasScript.js"></script>
+	<script src = "../scripts/userScript.js"></script>
+
+</html>

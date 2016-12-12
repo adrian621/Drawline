@@ -44,10 +44,6 @@ initUserVote = function(socket) {
 	socket.emit('curr_vote', false);
 }
 
-
-
-
-
 changeUserVote = function(socket, io) {
 	//Go through all users and find the one who changes their mind.
 	for (var i = 0; i < onlineUsers.votes.length; i++) {

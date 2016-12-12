@@ -22,7 +22,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		case 'coordinates':
 		//  if(controlValidCordinates(data.coord_data, socket)){
 		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
-		 	 drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
+		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
 		//  }
 			break;
 
@@ -42,28 +42,31 @@ function drawServerCanvas(data){
 
 		var width = data.resolution[0];
 		var height = data.resolution[1];
-	  for (var i = 3; i < data.cnv_data.length; i++) {
 
+		var scaleX = canvas.width/width;
+		var scaleY = canvas.height/height;
+
+		//Let server's canvas grow dynamically as it receives coordinates
+		if(width > canvas.width)
+			canvas.width = width;
+
+		if(height > canvas.height)
+			canvas.height = height;
+
+	  for (var i = 3; i < data.cnv_data.length; i++) {
 			var tmp = data.cnv_data[i];
 	    var prev_tmp = data.cnv_data[i-1];
 
-	  	curr_x = tmp[0];
-	  	curr_y = tmp[1];
-
-			//Let server's canvas grow dynamically as it receives coordinates
-			if(width > canvas.width)
-				canvas.width = width;
-
-			if(height > canvas.height)
-				canvas.height = height;
+	  	curr_x = tmp[0] * scaleX;
+	  	curr_y = tmp[1] * scaleY;
 
 			//LÄGG TILL I VALIDCOORDCHECK
 			//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
 			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
 				return;
 
-	    prev_x = prev_tmp[0];
-	    prev_y = prev_tmp[1];
+	    prev_x = prev_tmp[0]*scaleX;
+	    prev_y = prev_tmp[1]*scaleY;
 
 	    ctx.beginPath();
 			ctx.lineCap = "round";

@@ -24,13 +24,13 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'coordinates':
 		//  if(controlValidCordinates(data.coord_data, socket)){
-		  	io.emit('ext_coordinates', data.coord_data);
-		 	 drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
+		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+		 	 drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
 		//  }
 			break;
 
 		case 'wantCanvas':
-			socket.emit('latestCanvas', canvas.toDataURL());
+			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 			break;
 		default:
 			break;
@@ -42,21 +42,23 @@ function drawServerCanvas(data){
 	if(data.type == 'coordData'){
 		var sizeVal = data.cnv_data[0];
 		var colorVal = data.cnv_data[1];
+
+		var width = data.resolution[0];
+		var height = data.resolution[1];
 	  for (var i = 3; i < data.cnv_data.length; i++) {
 
 			var tmp = data.cnv_data[i];
 	    var prev_tmp = data.cnv_data[i-1];
 
-	  	var x, y, width, height;
 	  	curr_x = tmp[0];
 	  	curr_y = tmp[1];
 
 			//Let server's canvas grow dynamically as it receives coordinates
-			if(curr_x > canvas.width)
-				canvas.width = curr_x;
+			if(width > canvas.width)
+				canvas.width = width;
 
-			if(curr_y > canvas.height)
-				canvas.height = curr_y;
+			if(height > canvas.height)
+				canvas.height = height;
 
 			//LÄGG TILL I VALIDCOORDCHECK
 			//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
@@ -65,8 +67,6 @@ function drawServerCanvas(data){
 
 	    prev_x = prev_tmp[0];
 	    prev_y = prev_tmp[1];
-
-	  	width = height = (sizeVal/2);
 
 	    ctx.beginPath();
 			ctx.lineCap = "round";
@@ -101,7 +101,7 @@ controlValidCordinates = function(data, socket){
 		return true;
 	}
 	else	{
-			socket.emit('latestCanvas', canvas.toDataURL());
+			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 		}
 }
 

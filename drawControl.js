@@ -1,7 +1,7 @@
 //This module will handle all operations of the board.
 var draw_Control = module.exports = {};
 
-var Canvas = require('canvas'), canvas = new Canvas(600,600), ctx = canvas.getContext('2d'), Image = Canvas.Image;
+var Canvas = require('canvas'), canvas = new Canvas(1,1), ctx = canvas.getContext('2d'), Image = Canvas.Image;
 
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
@@ -23,10 +23,10 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		break;
 
 		case 'coordinates':
-			if(controlValidCordinates(data.coord_data, socket)){
-				io.emit('ext_coordinates', data.coord_data);
-				drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
-			}
+		//  if(controlValidCordinates(data.coord_data, socket)){
+		  	io.emit('ext_coordinates', data.coord_data);
+		 	 drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
+		//  }
 			break;
 
 		case 'wantCanvas':
@@ -51,8 +51,15 @@ function drawServerCanvas(data){
 	  	curr_x = tmp[0];
 	  	curr_y = tmp[1];
 
+			//Let server's canvas grow dynamically as it receives coordinates
+			if(curr_x > canvas.width)
+				canvas.width = curr_x;
+
+			if(curr_y > canvas.height)
+				canvas.height = curr_y;
+
 			//LÄGG TILL I VALIDCOORDCHECK
-			console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+			//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
 			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
 				return;
 

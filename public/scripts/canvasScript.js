@@ -1,22 +1,24 @@
 var socket = io();
 
 var canvas = document.getElementById('canvas');
+
+
 var ctx = canvas.getContext("2d");
 
-var preview_canvas = document.getElementById('preview_canvas');
-var preview_ctx = preview_canvas.getContext("2d");
+//var preview_canvas = document.getElementById('preview_canvas');
+//var preview_ctx = preview_canvas.getContext("2d");
 
 var size = document.getElementById('size');
 var color = document.getElementById('color');
 
-var dBut = document.getElementById("downloadBut");
+//var dBut = document.getElementById("downloadBut");
 
-window.addEventListener('mousedown', function(){
-	draw_preview()}, false);
-size.addEventListener("input", function(){
-	draw_preview()}, false);
-color.addEventListener("input", function(){
-	draw_preview()}, false);
+// window.addEventListener('mousedown', function(){
+// 	draw_preview()}, false);
+// size.addEventListener("input", function(){
+// 	draw_preview()}, false);
+// color.addEventListener("input", function(){
+// 	draw_preview()}, false);
 canvas.addEventListener("mousedown", function(e){
 	findMove('down', e)}, false);
 canvas.addEventListener("mousemove", function(e){
@@ -29,7 +31,7 @@ window.addEventListener('resize', function(e){
   scale_canvas(e)}, false);
 window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
-dBut.addEventListener('click', dlCanvas, false);
+//dBut.addEventListener('click', dlCanvas, false);
 
 
 canvas.addEventListener("touchstart", function(e){
@@ -53,68 +55,6 @@ var dot_flag = false;
 var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
-
-function touchMove(res, e){
-	switch(res){
-		case 'down':
-			window.blockMenuHeaderScroll = true;
-			touch = e.changedTouches[0];
-			touches = e.changedTouches;
-
-			newCordX = touch.pageX - rect.left;
-			newCordY = touch.pageY - rect.top;
-
-			coordinates.push(size.value, "#"+color.value);
-			frst_coord_tuple = [newCordX, newCordY];
-			coordinates.push(frst_coord_tuple);
-
-			ctx.beginPath();
-			ctx.fillStyle = "#" + color.value;
-			ctx.fillRect = (newCordX, newCordY, size.value, size.value);
-			ctx.closePath();
-
-		break;
-		case 'move':
-			if (blockMenuHeaderScroll)
-	    {
-	        e.preventDefault();
-	    }
-
-			touch = e.changedTouches[0];
-
-			//Set old mouse coordinates to "new" previous coordinates
-			prevCordX = newCordX;
-			prevCordY = newCordY;
-			//Current relative mouse coordinates.
-			newCordX = touch.pageX - rect.left;
-			newCordY = touch.pageY - rect.top;
-
-			coord_tuple = [newCordX, newCordY];
-			coordinates.push(coord_tuple);
-
-			if(coordinates.length > 50){
-				socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
-				coordinates = [];
-				coordinates.push(size.value, "#"+color.value);
-				coordinates.push(coord_tuple);
-			}
-
-			draw();
-		break;
-		case 'up':
-			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
-			//Clear coordinates
-			coordinates = [];
-			window.blockMenuHeaderScroll = false;
-		break;
-		case 'out':
-			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
-			//Clear coordinates
-			coordinates = [];
-			window.blockMenuHeaderScroll = false;
-		break;
-	}
-}
 function dlCanvas() {
 	canvas.toBlob(function(blob) {
 			saveAs(blob, "output.gif");
@@ -124,7 +64,7 @@ function dlCanvas() {
 socket.on('connect', function(){
 	initCanvas();
 	socket.emit('drawControl',{type:'wantCanvas'});
-	draw_preview();
+	//draw_preview();
 });
 
 socket.on('ext_coordinates', function (data){
@@ -135,9 +75,9 @@ socket.on('ext_coordinates', function (data){
 socket.on('latestCanvas', function(data){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	var img = new Image;
-
+	console.log("latest canv");
 	img.onload = function(){
-		ctx.drawImage(img,0,0);
+		ctx.drawImage(img,0,0, canvas.width, canvas.height);
 	}
 
 	img.src = data;
@@ -232,6 +172,69 @@ function findMove(res, e) {
 	}
 }
 
+
+function touchMove(res, e){
+	switch(res){
+		case 'down':
+			window.blockMenuHeaderScroll = true;
+			touch = e.changedTouches[0];
+			touches = e.changedTouches;
+
+			newCordX = touch.pageX - rect.left;
+			newCordY = touch.pageY - rect.top;
+
+			coordinates.push(size.value, "#"+color.value);
+			frst_coord_tuple = [newCordX, newCordY];
+			coordinates.push(frst_coord_tuple);
+
+			ctx.beginPath();
+			ctx.fillStyle = "#" + color.value;
+			ctx.fillRect = (newCordX, newCordY, size.value, size.value);
+			ctx.closePath();
+
+		break;
+		case 'move':
+			if (blockMenuHeaderScroll)
+	    {
+	        e.preventDefault();
+	    }
+
+			touch = e.changedTouches[0];
+
+			//Set old mouse coordinates to "new" previous coordinates
+			prevCordX = newCordX;
+			prevCordY = newCordY;
+			//Current relative mouse coordinates.
+			newCordX = touch.pageX - rect.left;
+			newCordY = touch.pageY - rect.top;
+
+			coord_tuple = [newCordX, newCordY];
+			coordinates.push(coord_tuple);
+
+			if(coordinates.length > 50){
+				socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+				coordinates = [];
+				coordinates.push(size.value, "#"+color.value);
+				coordinates.push(coord_tuple);
+			}
+
+			draw();
+		break;
+		case 'up':
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			//Clear coordinates
+			coordinates = [];
+			window.blockMenuHeaderScroll = false;
+		break;
+		case 'out':
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			//Clear coordinates
+			coordinates = [];
+			window.blockMenuHeaderScroll = false;
+		break;
+	}
+}
+
 function draw() {
 	//Both these values will be sent to server
 	var sizeVal = size.value;
@@ -245,7 +248,7 @@ function draw() {
   ctx.strokeStyle = colorVal;
   ctx.stroke();
 
-	draw_preview();
+	//draw_preview();
 }
 
 function draw_preview(){

@@ -23,7 +23,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		break;
 
 		case 'coordinates':
-			if(controlValidCordinates(data.coord_data)){
+			if(controlValidCordinates(data.coord_data, socket)){
 				io.emit('ext_coordinates', data.coord_data);
 				drawServerCanvas({type: 'coordData', cnv_data: data.coord_data});
 			}
@@ -50,6 +50,11 @@ function drawServerCanvas(data){
 	  	var x, y, width, height;
 	  	curr_x = tmp[0];
 	  	curr_y = tmp[1];
+
+			//LÄGG TILL I VALIDCOORDCHECK
+			console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
+				return;
 
 	    prev_x = prev_tmp[0];
 	    prev_y = prev_tmp[1];
@@ -79,7 +84,7 @@ function drawServerCanvas(data){
 }
 
 //check validity
-controlValidCordinates = function(data){
+controlValidCordinates = function(data, socket){
 	if(!checkDef(data)){
 	return false;
 	}

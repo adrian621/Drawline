@@ -31,6 +31,16 @@ window.addEventListener('scroll', function(e){
 	scale_canvas(e)}, false);
 dBut.addEventListener('click', dlCanvas, false);
 
+
+canvas.addEventListener("touchstart", function(e){
+	touchMove('down', e)}, false);
+canvas.addEventListener("touchmove", function(e){
+	touchMove('move', e)}, false);
+canvas.addEventListener("touchend", function(e){
+	touchMove('up', e)}, false);
+canvas.addEventListener("touchcancel", function(e){
+	touchMove('out', e)}, false);
+
 var flag = false;
 var prevCordX = 0;
 var prevCordY = 0;
@@ -44,11 +54,71 @@ var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
 
+function touchMove(res, e){
+	switch(res){
+		case 'down':
+			window.blockMenuHeaderScroll = true;
+			touch = e.changedTouches[0];
+			touches = e.changedTouches;
 
+			newCordX = touch.pageX - rect.left;
+			newCordY = touch.pageY - rect.top;
+
+			coordinates.push(size.value, "#"+color.value);
+			frst_coord_tuple = [newCordX, newCordY];
+			coordinates.push(frst_coord_tuple);
+
+			ctx.beginPath();
+			ctx.fillStyle = "#" + color.value;
+			ctx.fillRect = (newCordX, newCordY, size.value, size.value);
+			ctx.closePath();
+
+		break;
+		case 'move':
+			if (blockMenuHeaderScroll)
+	    {
+	        e.preventDefault();
+	    }
+
+			touch = e.changedTouches[0];
+
+			//Set old mouse coordinates to "new" previous coordinates
+			prevCordX = newCordX;
+			prevCordY = newCordY;
+			//Current relative mouse coordinates.
+			newCordX = touch.pageX - rect.left;
+			newCordY = touch.pageY - rect.top;
+
+			coord_tuple = [newCordX, newCordY];
+			coordinates.push(coord_tuple);
+
+			if(coordinates.length > 50){
+				socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+				coordinates = [];
+				coordinates.push(size.value, "#"+color.value);
+				coordinates.push(coord_tuple);
+			}
+
+			draw();
+		break;
+		case 'up':
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			//Clear coordinates
+			coordinates = [];
+			window.blockMenuHeaderScroll = false;
+		break;
+		case 'out':
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			//Clear coordinates
+			coordinates = [];
+			window.blockMenuHeaderScroll = false;
+		break;
+	}
+}
 function dlCanvas() {
 	canvas.toBlob(function(blob) {
-			saveAs(blob, "output.jpeg");
-	}, "image/jpeg");
+			saveAs(blob, "output.gif");
+	}, "image/gif");
 };
 
 socket.on('connect', function(){
@@ -91,7 +161,7 @@ function draw_ext(data){
   for (var i = 3; i < data.length; i++) {
 	prev_temp_data = data[i-1];
 	temp_data = data[i];
-	  
+
 	ctx.beginPath();
 	ctx.lineCap = "round";
 	ctx.moveTo(prev_temp_data[0], prev_temp_data[1]);
@@ -130,7 +200,6 @@ function findMove(res, e) {
 
 	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
-		res = 'up';
 	  	//* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
 	 	socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
 		//Clear coordinates

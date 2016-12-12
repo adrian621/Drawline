@@ -2,21 +2,23 @@
 #buttons{text-align:center;}
 #controlDiv{flex:1;}
 #sizeDiv{display:inline-block;}
-#colorDiv{display:inline-block;}
-#size{margin:auto}
+#colorDiv{margin-top:20px;}
+#size{margin:auto; margin-top:8px;}
 #Header{text-align:center; color:#6495ED}
-#usersDiv{flex:1; display:flex;}
 #onlineUsersList{list-style-type: none;}
 #content{text-align:center; flex:3;}
 #container{display: flex; width: 100%; height: 80%; margin:auto;}
 #usersVotes{flex:1;display:inline-block;}
 #users{flex:1;display:inline-block;}
 #preview_canvas{text-align:center;}
-#downloadContainer{text-align:center;}
-#specificUserVote{text-align:center;}
+#specificUserVote{padding-left:47%}
 #clearQ{text-align:center;}
 #voteContainer{text-align:center;}
 #menu{position:absolute;}
+#color{margin:auto; margin-top:8px;}
+#vStats{margin:auto; margin-top:100px;}
+#voteButtonID{margin:auto;}
+#usersDiv{margin-top:100px;}
 /* The side navigation menu */
 .sidenav {
     height: 100%; /* 100% Full-height */
@@ -32,13 +34,20 @@
 }
 
 /* The navigation menu links */
-.sidenav a, p, input, progress, ul {
-    padding: 8px 8px 8px 32px;
+.sidenav a, p, input, progress{
     text-decoration: none;
     font-size: 15px;
     color: #818181;
     display: block;
     transition: 0.3s
+}
+
+.sidenav p{
+  padding-left:20px;
+}
+
+.sidenav ul{
+  padding-left:20px;
 }
 
 /* When you mouse over the navigation links, change their color */

@@ -286,7 +286,7 @@ function scale_canvas(e){
 
 	//RITA OM EFTER RESIZE. VRF DEN INTE FUNKA
 	load_image(old_dataURL, canvas.width/old_w, canvas.height/old_h);
-
+	socket.emit('drawControl',{type:'wantCanvas'});
 	old_w = canvas.width;
 	old_h = canvas.height;
 	old_dataURL = canvas.toDataURL();

@@ -7,9 +7,6 @@ draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
 
-draw_Control.setServerCanvas = function(data){
-	canvas = data;
-}
 
 draw_Control.clearCanvas = function(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);

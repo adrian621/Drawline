@@ -47,6 +47,7 @@ var prevCordY = 0;
 var newCordX = 0;
 var newCordY = 0;
 var dot_flag = false;
+var new_change_flag = false;
 
 //Will look like:
 // coordinates = [[SIZE, COLOR],[x1,y1],[x2,y2]...[xn, yn]]
@@ -129,6 +130,9 @@ socket.on('connect', function(){
 
 socket.on('ext_coordinates', function (data){
   draw_ext(data);
+  if(flag) {
+  	new_change_flag = true;
+  }
 });
 
 
@@ -173,6 +177,11 @@ function draw_ext(data){
 }
 function findMove(res, e) {
 	if(res == 'down') {
+		//If a new change has happened before the local user has "commited" their change, the local changes overwrites the external changes.
+		if(new_change_flag) {
+			draw_ext(coordinates);
+			new_change_flag = false;
+		}
 
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
@@ -209,6 +218,11 @@ function findMove(res, e) {
 	}
 
 	if(res == 'move' && flag) {
+		//If a new change has happened before the local user has "commited" their change, the local changes overwrites the external changes.
+		if(new_change_flag) {
+			draw_ext(coordinates);
+			new_change_flag = false;
+		}
 
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;

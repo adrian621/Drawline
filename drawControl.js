@@ -28,6 +28,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'wantCanvas':
 			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
+			console.log('sent img of width ' + canvas.width);
 			break;
 		default:
 			break;
@@ -84,6 +85,7 @@ function drawServerCanvas(data){
 		}
 
 		img.src = data.cnv_data;
+		console.log("Drew image of width " + img.width);
 	}
 }
 

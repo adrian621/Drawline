@@ -58,9 +58,6 @@ function touchMove(res, e){
 	switch(res){
 		case 'down':
 			window.blockMenuHeaderScroll = true;
-			newCordX = e.clientX - rect.left;
-			newCordY = e.clientY - rect.top;
-
 			touch = e.changedTouches[0];
 			touches = e.changedTouches;
 
@@ -120,12 +117,12 @@ function touchMove(res, e){
 }
 function dlCanvas() {
 	canvas.toBlob(function(blob) {
-			saveAs(blob, "output.jpeg");
-	}, "image/jpeg");
+			saveAs(blob, "output.gif");
+	}, "image/gif");
 };
 
 socket.on('connect', function(){
-	//initCanvas();
+	initCanvas();
 	socket.emit('drawControl',{type:'wantCanvas'});
 	draw_preview();
 });

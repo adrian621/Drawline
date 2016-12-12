@@ -51,6 +51,11 @@ function drawServerCanvas(data){
 	  	curr_x = tmp[0];
 	  	curr_y = tmp[1];
 
+			//LÄGG TILL I VALIDCOORDCHECK
+			console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
+				return;
+
 	    prev_x = prev_tmp[0];
 	    prev_y = prev_tmp[1];
 

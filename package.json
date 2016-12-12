@@ -11,13 +11,18 @@
     "type": "git",
     "url": "git+https://github.com/adty3240/Drawline.git"
   },
-  "engines":{
-	"node":"6.9.2"
+  "engines": {
+    "node": "6.9.2"
   },
   "author": "adrian",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "canvas": "^1.6.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.5",
     "express": "^4.14.0",
+    "express-session": "^1.14.2",
     "socket.io": "^1.7.1"
   },
   "bugs": {

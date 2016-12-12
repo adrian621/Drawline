@@ -3,22 +3,79 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server, {});
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+var expressValidator = require('express-validator');
+var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
+
+//All routes moved to this module.
+//var routes = require('./routes')(app); will use this next push
 
 //Reading and writing files
 var fs = require('fs');
 
+//Specifie the view engine. All views will be found in folder views and be ejs files.
+app.set('view engine', 'ejs');
+
+
 //specify folder to use for static pagaes such as css scripts
 app.use(express.static('public'));
 
-//Handle all get requests from clients.
-//send the html file
+//Use body-parser to parse post requests
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
-app.get('*', function(req, res){
-	var file = req.params[0];
-	res.sendFile(__dirname + '/public/views/' + file);
+//Express validator to validate usernames
+app.use(expressValidator());
+
+//Cookie-parser needed by session.
+app.use(cookieParser());
+
+//express-session to create 
+app.use(expressSession({		
+	secret:'max', 
+	saveUninitialized : true, 
+	resave: true}));
+
+//handle canvas request if session is ok. Otherwise send index file.
+app.get('/canvas', function(req, res, next){
+	if(!req.session.username){
+	res.redirect('/');	
+	}else
+	{		
+	var file = req.params[0];	
+	var u = req.params.user_name;
+	res.render('canvasView', {username: JSON.stringify(req.session.username)});
+	req.session.destroy();
+}
 });
+
+
+//send index file as standard for any request.
+app.get('*', function(req, res, next){
+	res.render('index');
+});
+
+
+//make new session when user is posted.
+app.post('/username', function(req, res, next){
+	/*
+	req.check('user_name', 'invalid elol').isLength({min: 4});
+	var errors = req.validationErrors();
+	if(errors){
+		console.log("sad");
+		req.session.errors = errors;
+	}
+	*/
+	var username = req.body.user_name;
+	req.session.username = username;
+	res.redirect('/canvas'); 
+});
+
 
 //Read local server canvas at server startup
 server.on('listening', function () {

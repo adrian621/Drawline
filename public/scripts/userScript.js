@@ -1,6 +1,5 @@
 //Code for Voting-button
 var vote_button = document.getElementById('voteButtonID');
-
 vote_button.addEventListener("click", function() {
 	socket.emit('userControl', {type:'userChange'});
 });
@@ -17,9 +16,7 @@ socket.on('voteStats', function(data){
 
 //Hämta ut parameter
 getUserName = function(){
-	var url = window.location.href;
-	var splitted = url.split('=');
-	return splitted[1];
+	return username;
 }
 //Skicka till server
 emitUserName = function(userName){

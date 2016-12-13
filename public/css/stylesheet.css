@@ -21,8 +21,10 @@
 #downloadContainer{text-align:center; margin-top:80px;}
 #downloadBut{margin:auto;}
 #usersDiv{margin-top:100px;}
+#drawline{display:inline; font-size:25px; padding-right:15%; color: white;}
 /* The side navigation menu */
 .sidenav {
+
     height: 100%; /* 100% Full-height */
     width: 0; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
@@ -31,7 +33,7 @@
     left: 0;
     background-color: #111; /* Black*/
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    padding-top: 0; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
 
@@ -59,13 +61,17 @@
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
-    position: absolute;
+    display:inline;
     top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
 }
 
+#header{
+  padding-bottom:50px;
+
+}
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {

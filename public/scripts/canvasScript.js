@@ -61,7 +61,7 @@ var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
 function handleOrientation(e){
-	socket.emit('rot', (e.beta));
+	//socket.emit('rot', (e.beta));
 
 }
 function dlCanvas() {

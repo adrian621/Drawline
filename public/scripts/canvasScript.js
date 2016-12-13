@@ -14,7 +14,7 @@ var color = document.getElementById('color');
 var old_w;
 var old_h;
 var old_dataURL;
-//var dBut = document.getElementById("downloadBut");
+var dBut = document.getElementById("downloadBut");
 
 // window.addEventListener('mousedown', function(){
 // 	draw_preview()}, false);
@@ -35,7 +35,7 @@ canvas.addEventListener("mouseout", function(e){
 window.addEventListener('resize', function(e){
   scale_canvas(e); console.log("out");}, false);
 
-//dBut.addEventListener('click', dlCanvas, false);
+dBut.addEventListener('click', dlCanvas, false);
 
 
 canvas.addEventListener("touchstart", function(e){

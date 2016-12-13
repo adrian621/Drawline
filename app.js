@@ -41,10 +41,15 @@ app.use(expressSession({
 	saveUninitialized : true, 
 	resave: true}));
 
+app.get('/', function(req, res, next){
+	res.render('index');
+});
+
+
 //handle canvas request if session is ok. Otherwise send index file.
 app.get('/canvas', function(req, res, next){
 	if(!req.session.username){
-	res.redirect('/');	
+	res.redirect('/index');	
 	}else
 	{		
 	var file = req.params[0];	

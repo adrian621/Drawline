@@ -12,7 +12,8 @@
     "url": "git+https://github.com/adty3240/Drawline.git"
   },
   "engines": {
-    "node": "6.9.2"
+    "node": "5.6.0",
+    "npm": "3.6.0"
   },
   "author": "adrian",
   "license": "BSD-2-Clause",

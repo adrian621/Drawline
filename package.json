@@ -5,15 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "app.js",
+    "start": "app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adty3240/Drawline.git"
   },
   "engines": {
-    "node": "5.6.0",
-    "npm": "3.6.0"
+    "node": "6.9.2"
   },
   "author": "adrian",
   "license": "BSD-2-Clause",

@@ -35,19 +35,19 @@ app.use(expressValidator());
 //Cookie-parser needed by session.
 app.use(cookieParser());
 
-//express-session to create 
-app.use(expressSession({		
-	secret:'max', 
-	saveUninitialized : true, 
+//express-session to create
+app.use(expressSession({
+	secret:'max',
+	saveUninitialized : true,
 	resave: true}));
 
 //handle canvas request if session is ok. Otherwise send index file.
 app.get('/canvas', function(req, res, next){
 	if(!req.session.username){
-	res.redirect('/');	
+	res.redirect('/');
 	}else
-	{		
-	var file = req.params[0];	
+	{
+	var file = req.params[0];
 	var u = req.params.user_name;
 	res.render('canvasView', {username: JSON.stringify(req.session.username)});
 	req.session.destroy();
@@ -73,7 +73,7 @@ app.post('/username', function(req, res, next){
 	*/
 	var username = req.body.user_name;
 	req.session.username = username;
-	res.redirect('/canvas'); 
+	res.redirect('/canvas');
 });
 
 
@@ -102,6 +102,10 @@ console.log('client connected');
 	socket.on('disconnect', function(){
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	});
+
+	socket.on('rot', function(data){
+		console.log(data);
+	})
 });
 
 //Save server canvas locally every 10 second

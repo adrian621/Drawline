@@ -33,10 +33,11 @@ canvas.addEventListener("mouseup", function(e){
 canvas.addEventListener("mouseout", function(e){
 	findMove('out', e)}, false);
 window.addEventListener('resize', function(e){
-  scale_canvas(e); console.log("out");}, false);
+  scale_canvas(e);}, false);
 
 dBut.addEventListener('click', dlCanvas, false);
 
+window.addEventListener("deviceorientation", handleOrientation, true);
 
 canvas.addEventListener("touchstart", function(e){
 	touchMove('down', e)}, false);
@@ -59,6 +60,10 @@ var dot_flag = false;
 var coordinates = [];
 var rect = canvas.getBoundingClientRect();
 
+function handleOrientation(e){
+	//socket.emit('rot', (canvas.width + "   " + canvas.height);
+
+}
 function dlCanvas() {
 	canvas.toBlob(function(blob) {
 			saveAs(blob, "output.gif");
@@ -223,7 +228,7 @@ function touchMove(res, e){
 			coordinates.push(coord_tuple);
 
 			if(coordinates.length > 50){
-				socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+				socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
 				coordinates = [];
 				coordinates.push(size.value, "#"+color.value);
 				coordinates.push(coord_tuple);
@@ -232,13 +237,13 @@ function touchMove(res, e){
 			draw();
 		break;
 		case 'up':
-			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
 			//Clear coordinates
 			coordinates = [];
 			window.blockMenuHeaderScroll = false;
 		break;
 		case 'out':
-			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates} );
+			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
 			//Clear coordinates
 			coordinates = [];
 			window.blockMenuHeaderScroll = false;
@@ -278,7 +283,7 @@ function draw_preview(){
   preview_ctx.stroke();
 }
 function scale_canvas(e){
-
+	socket.emit('rot', 'rotated');
   rect = canvas.getBoundingClientRect();
 
 	canvas.width = window.innerWidth;
@@ -287,6 +292,8 @@ function scale_canvas(e){
 	//RITA OM EFTER RESIZE. VRF DEN INTE FUNKA
 	load_image(old_dataURL, canvas.width/old_w, canvas.height/old_h);
 	socket.emit('drawControl',{type:'wantCanvas'});
+
+	socket.emit('rot', canvas.width + "   " + canvas.height);
 	old_w = canvas.width;
 	old_h = canvas.height;
 	old_dataURL = canvas.toDataURL();

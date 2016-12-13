@@ -41,7 +41,7 @@ app.use(expressSession({
 	saveUninitialized : true, 
 	resave: true}));
 
-app.get('/', function(req, res, next){
+app.get('*', function(req, res, next){
 	res.render('index');
 });
 

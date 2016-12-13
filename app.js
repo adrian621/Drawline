@@ -45,7 +45,7 @@ app.get('/', function(req, res, next){
 	res.render('index');
 });
 
-
+/*
 //handle canvas request if session is ok. Otherwise send index file.
 app.get('/canvas', function(req, res, next){
 	if(!req.session.username){
@@ -64,23 +64,24 @@ app.get('/canvas', function(req, res, next){
 app.get('*', function(req, res, next){
 	res.render('index');
 });
-
+*/
 
 //make new session when user is posted.
+/*
 app.post('/username', function(req, res, next){
-	/*
+	
 	req.check('user_name', 'invalid elol').isLength({min: 4});
 	var errors = req.validationErrors();
 	if(errors){
 		console.log("sad");
 		req.session.errors = errors;
 	}
-	*/
+	
 	var username = req.body.user_name;
 	req.session.username = username;
 	res.redirect('/canvas'); 
 });
-
+*/
 
 //Read local server canvas at server startup
 server.on('listening', function () {

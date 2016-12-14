@@ -20,10 +20,10 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		break;
 
 		case 'coordinates':
-		//  if(controlValidCordinates(data.coord_data, socket)){
+		  if(controlValidCordinates(data.coord_data, socket)){
 		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
-		//  }
+		  }
 			break;
 
 		case 'wantCanvas':
@@ -96,10 +96,11 @@ function drawServerCanvas(data){
 //check validity
 controlValidCordinates = function(data, socket){
 	if(!checkDef(data)){
-	return false;
+		return false;
 	}
 	sizeVal = data[0];
 	coordinates = data[2];
+
 	if(checkValidSize(sizeVal) && checkValidCords(coordinates)){
 		return true;
 	}
@@ -111,7 +112,7 @@ controlValidCordinates = function(data, socket){
 //check that everything is defined
 checkDef = function(data){
 	if(data[0] === undefined || data[2] === undefined || data[2][0] === undefined || data[2][1] === undefined){
-	return false;
+		return false;
 	}
 	else return true;
 }
@@ -120,9 +121,9 @@ checkDef = function(data){
 //check validity of size
 checkValidSize = function(sizeVal){
 	if((sizeVal < 2) || (sizeVal > 30)){
-	return false;
+		return false;
 	}
-	return true;
+		return true;
 }
 
 //check validity of coordinates

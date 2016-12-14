@@ -1,4 +1,4 @@
-#canvas{cursor:url(RedBrush.gif) 5 26, auto; }
+#canvas{position:absolute; z-index-1;}
 #buttons{text-align:center;}
 #controlDiv{flex:1;}
 #sizeDiv{display:inline-block;}
@@ -14,21 +14,42 @@
 #specificUserVote{padding-left:47%}
 #clearQ{text-align:center;}
 #voteContainer{text-align:center;}
-#menu{position:absolute;}
+#menu{position:absolute; z-index:1;}
 #color{margin:auto; margin-top:8px;}
-#vStats{margin:auto; margin-top:100px;}
+#vStats{margin:auto; margin-top:100px; width:75%;}
 #voteButtonID{margin:auto;}
 #downloadContainer{text-align:center; margin-top:80px;}
 #downloadBut{margin:auto;}
 #usersDiv{margin-top:100px;}
-#drawline{display:inline; font-size:25px; padding-right:15%; color: white;}
+#drawline{display:inline; font-size:35px; padding-right:15%; color: white;}
+#create{padding-bottom:40px; text-align:center;}
+#cRoom{left:50%; transform: translate(-50%, 0); margin-top:10px;}
+#roomsContainer{padding:0;height:0; width:0; background-color:#f2f0ee; display:none; position:absolute; z-index:3; transition: 1s;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+
+#roomList{
+    display:none;
+    width:0;
+    height:0;
+    pointer-events: none;
+    margin-left:35%
+}
+
+#newRoom{display:none; font-size:20px;}
+
+#rLabel{margin-top:30px;}
+#newRoomInfo{display:none; position:absolute; top: 0; left: 0; transform: translate(-50%, -25%); transition:1s; z-index: 4; padding-top:0; }
+#rListTitle{text-align:center;}
 /* The side navigation menu */
 .sidenav {
-
     height: 100%; /* 100% Full-height */
     width: 0; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
+    z-index: 2; /* Stay on top */
     top: 0;
     left: 0;
     background-color: #111; /* Black*/
@@ -61,6 +82,7 @@
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
+    position:absolute;
     display:inline;
     top: 0;
     right: 25px;
@@ -68,8 +90,17 @@
     margin-left: 50px;
 }
 
+.box .closebtn {
+    display:inline;
+    position:absolute;
+
+    right: 10px;
+    font-size: 20px;
+
+}
+
 #header{
-  padding-bottom:50px;
+  padding-bottom:0;
 
 }
 

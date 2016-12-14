@@ -120,7 +120,6 @@ checkDef = function(data){
 
 //check validity of size
 checkValidSize = function(sizeVal){
-	console.log(sizeVal);
 	if((sizeVal < 2) || (sizeVal > 30)){
 		return false;
 	}

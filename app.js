@@ -10,6 +10,7 @@ var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
 
+
 //All routes moved to this module.
 //var routes = require('./routes')(app); will use this next push
 
@@ -45,13 +46,12 @@ app.use(expressSession({
 app.get('/canvas', function(req, res, next){
 	if(!req.session.username){
 	res.redirect('/');
-	}else
-	{
-	var file = req.params[0];
-	var u = req.params.user_name;
-	res.render('canvasView', {username: JSON.stringify(req.session.username)});
-	req.session.destroy();
-}
+	}else{
+  	var file = req.params[0];
+  	var u = req.params.user_name;
+  	res.render('canvasView', {username: JSON.stringify(req.session.username)});
+  	req.session.destroy();
+  }
 });
 
 
@@ -87,7 +87,7 @@ console.log('server is running');
 
 io.sockets.on('connection', function(socket){
 console.log('client connected');
-
+//console.log(io.sockets.adapter.rooms);
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){

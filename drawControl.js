@@ -21,13 +21,15 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'coordinates':
 		  if(controlValidCordinates(data.coord_data, socket)){
-		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+		  //	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+				io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
 		  }
 			break;
 
 		case 'wantCanvas':
-			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
+			//socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
+			socket.to(socket.curr_room).emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 			break;
 		default:
 			break;

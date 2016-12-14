@@ -6,6 +6,7 @@ var room = "test";
 var cRoomBut = document.getElementById('cRoom');
 var showListBut = document.getElementById('create');
 var rName = document.getElementById('roomName');
+var table = document.getElementById("roomList");
 
 socket.on('rooms', function(data){
   var table = document.getElementById("roomList");
@@ -42,9 +43,9 @@ socket.on('connect', function(){
 cRoomBut.onclick = function(){
   socket.emit('newRoom',{type: 'newRoom', roomName: rName.value})
 }
-//testa med o joina room
-//socket.emit('room', room);
 
-socket.on('message', function(data){
-  console.log(data);
-})
+//Check what room the client clicked and join
+$(table).click(function(e){
+  var roomToJoin = $(e.target).text();
+  socket.emit('newRoom',{type: 'joinRoom', roomName: roomToJoin});
+});

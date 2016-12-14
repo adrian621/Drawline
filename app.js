@@ -88,9 +88,8 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 //console.log(io.sockets.adapter.rooms);
-  socket.leave(socket.id);
-  socket.join('main');
-  socket.curr_room = 'main';
+  socket.curr_room = socket.id;
+  room_Control.roomFunctions({type: 'newRoom', roomName: 'main'}, socket, io);
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
@@ -120,6 +119,7 @@ console.log('client connected');
 
   socket.on('joinRoom', function(data){
     room_Control.roomFunctions(data, socket, io);
+    room_Control.sendRooms(socket, io);
   });
 
 

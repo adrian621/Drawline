@@ -1,3 +1,4 @@
+
 var canvas = document.getElementById('canvas');
 
 
@@ -313,7 +314,7 @@ function clearCanvas() {
 
 
 function load_image(src, x_scale, y_scale){
-	//ctx.clearRect(0, 0, canvas.width, canvas.height);
+	clearCanvas();
 	var img = new Image;
 	img.onload = function(){
 		ctx.drawImage(img,0,0, img.width*x_scale, img.height*y_scale);

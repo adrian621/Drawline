@@ -5,7 +5,7 @@ var socket = io();
 var room = "test";
 
 //testa med o joina room
-socket.emit('room', room);
+//socket.emit('room', room);
 
 socket.on('message', function(data){
   console.log(data);

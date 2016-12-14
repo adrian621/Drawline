@@ -120,6 +120,7 @@ checkDef = function(data){
 
 //check validity of size
 checkValidSize = function(sizeVal){
+	console.log(sizeVal);
 	if((sizeVal < 2) || (sizeVal > 30)){
 		return false;
 	}
@@ -130,8 +131,8 @@ checkValidSize = function(sizeVal){
 checkValidCords = function(coordinates){
 	var coord1 = coordinates[0];
 	var coord2 = coordinates[1];
-	var xMax = 600;
-	var yMax = 600;
+	var xMax = canvas.width;
+	var yMax = canvas.height;
 	if((coord1 <= yMax) && (coord1 >= 0) && (coord2 <= xMax) && (coord2 >= 0)){
 	return true;
 	}

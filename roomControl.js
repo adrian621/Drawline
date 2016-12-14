@@ -1,7 +1,6 @@
 var room_Control = module.exports = {};
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
-var existingRooms = [];
 
 room_Control.roomFunctions = function(data, socket, io){
   switch (data.type){
@@ -32,10 +31,6 @@ function createRoom(data, io, socket){
   socket.leave(socket.curr_room);
   socket.join(data.roomName);
 
-
-  if(!isInRoomList(data.roomName))
-    existingRooms.push(data.roomName);
-
   socket.curr_room = data.roomName;
 }
 
@@ -46,24 +41,9 @@ function joinRoom(data, io, socket){
   var old_room = socket.curr_room;
 
   //socket leaves room and joins new room
-  if(isInRoomList(data.roomName)){
-    socket.leave(socket.curr_room);
-    socket.join(data.roomName);
-  } else {
-    return;
-  }
+  socket.leave(socket.curr_room);
+  socket.join(data.roomName);
+
 
   socket.curr_room = data.roomName;
-
-  //add new room to servers roomlist
-  if(!isInRoomList(data.roomName))
-    existingRooms.push(data.roomName);
-}
-
-function isInRoomList(roomName){
-  for(var i = 0; i < existingRooms.length; i++){
-    if(roomName == existingRooms[i])
-      return true;
-  }
-  return false;
 }

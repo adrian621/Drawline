@@ -7,6 +7,13 @@ draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
 
+draw_Control.newCanvas = function(){
+		var Canvas = require('canvas'), 
+		canvas = new Canvas(1,1),
+		ctx = canvas.getContext('2d'),
+		Image = Canvas.Image;
+	return 	[canvas, ctx];
+}
 
 draw_Control.clearCanvas = function(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -11,18 +11,50 @@
 	</head>
 
 	<body>
+		<div class = "box" id ="roomsContainer">
+			<div class = "box" id = "newRoomInfo">
+				<a href="javascript:void(0)" class="closebtn" onclick="hideNewRoomInfo()">&times;</a>
+				<label id = "rLabel" class="label">Room Name</label>
+					<p class="control">
+					  <input id = "roomName" class="input" type="text" placeholder="Name">
+						<a class="button is-success" id="cRoom"> Create </a>
+					</p>
+			</div>
+			<div id="roomsHeader">
+				<a id = "newRoom" class="button is-info">Create Room</a>
+				<a href="javascript:void(0)" class="closebtn" onclick="hideRooms()">&times;</a>
+			</div>
+			<h2 id="rListTitle" class="title is-2">Rooms</h2>
+			<table id = "roomList" class="table">
+				<thead>
+			    <tr>
+			      <th>Room</th>
+			      <th>Connected</th>
+			    </tr>
+			  </thead>
+
+				<tbody>
+					<tr>
+		        <td><a href="#">test</a></td>
+						<td>5</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
 		<div id="mySidenav" class="sidenav">
 			<div id="header">
 				<p id="drawline"> Drawline </p>
 			  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 			</div>
+			<a id="create" onclick="showRooms()"><h2>List of rooms</h2></a>
 			<p> Size </p>
 		  <input type="range" id="size" min="2" value="10" max="30" step="2">
 			<div id="colorDiv">
 			  <p>Color</p>
 			  <input id = "color" class="jscolor" value="ab2567">
 			</div>
-			<progress id="vStats" max="100"></progress>
+			<progress class = "progress is-primary"  id="vStats" max="100"></progress>
 			<p id="specificUserVote"></p>
 			<div id="voteContainer"> <input id = "voteButtonID" class="button is-primary"type = "button" value = "Change vote" name = "vote_button"></div>
 			<div id="usersDiv">
@@ -43,6 +75,8 @@
 		var username = JSON.parse('<%- username %>');
 	</script>
 	<script src = "/socket.io/socket.io.js"></script>
+	<script src = "../scripts/styling.js"></script>
+	<script src = "../scripts/communication.js"></script>
 	<script src="../scripts/canvasScript.js"> </script>
 	<script src = "../scripts/userScript.js"></script>
 </html>

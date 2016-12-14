@@ -103,16 +103,23 @@ console.log('client connected');
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
 	});
 
-	socket.on('rot', function(data){
-		console.log(data);
-	})
+	socket.on('room', function(data){
+    socket.join(data);
+  });
+
+
 });
+
 
 //Save server canvas locally every 10 second
 setInterval(function(){
 	 save_canvas();
 	 //read_canvas();
  }, 10000);
+
+ setInterval(function(){
+ 	 io.sockets.in("test").emit('message', 'what is going on, party people?');
+  }, 100);
 
 //Save server's canvas dataURL(string) locally on server
 function save_canvas(){

@@ -1,5 +1,3 @@
-var socket = io();
-
 var canvas = document.getElementById('canvas');
 
 
@@ -24,8 +22,10 @@ var dBut = document.getElementById("downloadBut");
 // 	draw_preview()}, false);
 window.addEventListener('load', function(e){
 	init_page()}, false);
+
+
 canvas.addEventListener("mousedown", function(e){
-	findMove('down', e)}, false);
+	findMove('down', e);}, false);
 canvas.addEventListener("mousemove", function(e){
 	findMove('move', e)}, false);
 canvas.addEventListener("mouseup", function(e){
@@ -327,14 +327,3 @@ $( document ).ready(function() {
     old_w = canvas.width;
 		old_h = canvas.height;
 });
-
-
-/* Set the width of the side navigation to 250px */
-function openNav() {
-		document.getElementById("mySidenav").style.width = "250px";
-}
-
-/* Set the width of the side navigation to 0 */
-function closeNav() {
-		document.getElementById("mySidenav").style.width = "0";
-}

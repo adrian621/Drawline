@@ -3,6 +3,14 @@ var draw_Control = module.exports = {};
 
 var Canvas = require('canvas'), canvas = new Canvas(1,1), ctx = canvas.getContext('2d'), Image = Canvas.Image;
 
+draw_Control.newCanvas = function(){
+	var Canvas = require('canvas'), 
+	canvas = new Canvas(1,1), 
+	ctx = canvas.getContext('2d'), 
+	Image = Canvas.Image;
+return 	[canvas, ctx];
+}
+
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }

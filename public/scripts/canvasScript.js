@@ -15,6 +15,52 @@ var old_h;
 var old_dataURL;
 var dBut = document.getElementById("downloadBut");
 
+//newHax
+var rName = document.getElementById('roomName');
+var cRoom = document.getElementById('cRoom');
+
+var table = document.getElementById('roomList');
+
+
+socket.emit('roomControl',{type:'needList'});
+cRoom.onclick = function(){
+socket.emit('roomControl', {type: 'newRoom', roomName: rName.value});
+alert(rName.value);
+}
+socket.on('listOfRooms', function(data){
+	var rows = [];
+	var cells = [];
+	for(var i = 0; i < data.roomNames.length; i++){
+	rows[i] = table.insertRow(-1);
+	cells[i] = rows[i].insertCell(0);
+	cells[i].innerHTML = data.roomNames[i];	
+	
+	//rows[i].onclick = function(){
+	//cells[i].innerHTML);
+	//socket.emit('roomControl', {type: 'joinRoom', roomName: cells[i].innerHTML});
+	//}	
+	}	
+});
+$(table).click(function(e){
+	var roomtoJoin = $(e.target).text();
+	socket.emit('roomControl', {type: 'joinRoom', roomName: roomtoJoin});
+	
+});
+
+
+socket.on('addNewRoomToAllUsers', function(data){
+	var row = table.insertRow(-1);
+	var cell1 = row.insertCell(0);
+	cell1.innerHTML = data.roomName;
+	row.onclick = function(){
+	
+	socket.emit('roomControl', {type: 'joinRoom', roomName: cell1.innerHTML})	
+	}	
+});
+//newHax
+
+
+
 // window.addEventListener('mousedown', function(){
 // 	draw_preview()}, false);
 // size.addEventListener("input", function(){

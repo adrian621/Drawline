@@ -9,6 +9,7 @@ var expressValidator = require('express-validator');
 var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
+var room_Control = require('./roomControl');
 
 
 //All routes moved to this module.
@@ -101,6 +102,10 @@ console.log('client connected');
 
 	socket.on('disconnect', function(){
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+	});
+
+	socket.on('roomControl', function(data){
+		room_Control.roomFunctions(data, socket, io);
 	});
 
 	socket.on('room', function(data){

@@ -140,6 +140,10 @@ checkValidSize = function(sizeVal){
 
 //check validity of coordinates
 checkValidCords = function(coordinates){
+	
+	//Temporary v
+	return true;
+	
 	var coord1 = coordinates[0];
 	var coord2 = coordinates[1];
 	var xMax = canvas.width;

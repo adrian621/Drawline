@@ -7,6 +7,13 @@ draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
 
+draw_Control.newCanvas = function(){
+		var Canvas = require('canvas'), 
+		canvas = new Canvas(1,1),
+		ctx = canvas.getContext('2d'),
+		Image = Canvas.Image;
+	return 	[canvas, ctx];
+}
 
 draw_Control.clearCanvas = function(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -21,13 +28,15 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'coordinates':
 		  if(controlValidCordinates(data.coord_data, socket)){
-		  	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+		  //	io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+				io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
 		  }
 			break;
 
 		case 'wantCanvas':
-			socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
+			//socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
+			socket.to(socket.curr_room).emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 			break;
 		default:
 			break;

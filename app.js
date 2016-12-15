@@ -9,7 +9,7 @@ var expressValidator = require('express-validator');
 var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
-
+var room_Control = require('./roomControl.js');
 
 //All routes moved to this module.
 //var routes = require('./routes')(app); will use this next push
@@ -88,6 +88,8 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 //console.log(io.sockets.adapter.rooms);
+  socket.curr_room = socket.id;
+  room_Control.roomFunctions({type: 'newRoom', roomName: 'main'}, socket, io);
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
@@ -100,11 +102,24 @@ console.log('client connected');
 	});
 
 	socket.on('disconnect', function(){
+    socket.leave(socket.curr_room);
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+    room_Control.sendRooms(socket, io);
 	});
 
-	socket.on('room', function(data){
-    socket.join(data);
+  socket.on('wantRooms', function(){
+    room_Control.sendRooms(socket, io);
+  });
+
+  socket.on('newRoom', function(data){
+    //skapa rum
+    room_Control.roomFunctions(data, socket, io);
+    room_Control.sendRooms(socket, io);
+  });
+
+  socket.on('joinRoom', function(data){
+    room_Control.roomFunctions(data, socket, io);
+    room_Control.sendRooms(socket, io);
   });
 
 

@@ -40,6 +40,9 @@ socket.on('connect', function(){
 });
 
 cRoomBut.onclick = function(){
+  document.getElementById('newRoomInfo').style.display = "none";
+  document.getElementById('newRoomInfo').style.top = "0";
+  document.getElementById('newRoomInfo').style.marginLeft = "0";
   socket.emit('newRoom',{type: 'newRoom', roomName: rName.value})
 }
 

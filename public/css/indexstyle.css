@@ -1,14 +1,16 @@
 body{
-background-color: #EEE;
+
 font-family: Helvetica, Arial, sans-serif;
 }
 
-#nameFormId{text-align:center; margin-top:10%}
+#nameFormId{text-align:center; margin-top:3%}
 
 #nameInputId{
-    width: 400px;
-    padding: 12px 20px;
-    margin: 8px 0;
+    width: 200px;
 }
 
-#info{text-align:center; color:grey;}
+#info{height:100px;}
+
+#indexDrawline{color:#00D1B2; text-align:center;}
+
+#container{margin-top:10%;}

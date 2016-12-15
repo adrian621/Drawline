@@ -85,6 +85,7 @@ function drawServerCanvas(data){
 	    ctx.strokeStyle = colorVal;
 	    ctx.stroke();
 		}
+		
 	}
 
 	if(data.type == 'serverStart'){
@@ -121,6 +122,7 @@ controlValidCordinates = function(data, socket){
 //check that everything is defined
 checkDef = function(data){
 	if(data[0] === undefined || data[2] === undefined || data[2][0] === undefined || data[2][1] === undefined){
+		
 		return false;
 	}
 	else return true;
@@ -130,6 +132,7 @@ checkDef = function(data){
 //check validity of size
 checkValidSize = function(sizeVal){
 	if((sizeVal < 2) || (sizeVal > 30)){
+		console.log("not valid size");
 		return false;
 	}
 		return true;
@@ -141,9 +144,15 @@ checkValidCords = function(coordinates){
 	var coord2 = coordinates[1];
 	var xMax = canvas.width;
 	var yMax = canvas.height;
-	if((coord1 <= yMax) && (coord1 >= 0) && (coord2 <= xMax) && (coord2 >= 0)){
+	
+	
+	if((coord1 <= xMax) && (coord1 >= 0) && (coord2 <= yMax) && (coord2 >= 0)){
 	return true;
+	
 	}
+	console.log("not valid coords");
+	console.log(coord1 + "    xmax: " + xMax);
+	console.log(coord2 + "    ymax: " + yMax);
 	return false;
 }
 

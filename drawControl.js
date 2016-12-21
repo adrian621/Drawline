@@ -3,16 +3,15 @@ var draw_Control = module.exports = {};
 
 var Canvas = require('canvas'), canvas = new Canvas(1,1), ctx = canvas.getContext('2d'), Image = Canvas.Image;
 
+
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
 
+
 draw_Control.newCanvas = function(){
-		var Canvas = require('canvas'), 
-		canvas = new Canvas(1,1),
-		ctx = canvas.getContext('2d'),
-		Image = Canvas.Image;
-	return 	[canvas, ctx];
+		var canvaz = new Canvas(1, 1);
+		return canvaz;
 }
 
 draw_Control.clearCanvas = function(){
@@ -28,7 +27,9 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'coordinates':
 		  if(controlValidCordinates(data.coord_data, socket)){
-				io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+				//io.emit('ext_coordinates', [data.coord_data, data.resolution]);
+				io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
+
 			//	io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution});
 		  }
@@ -85,7 +86,7 @@ function drawServerCanvas(data){
 	    ctx.strokeStyle = colorVal;
 	    ctx.stroke();
 		}
-		
+
 	}
 
 	if(data.type == 'serverStart'){
@@ -122,7 +123,7 @@ controlValidCordinates = function(data, socket){
 //check that everything is defined
 checkDef = function(data){
 	if(data[0] === undefined || data[2] === undefined || data[2][0] === undefined || data[2][1] === undefined){
-		
+
 		return false;
 	}
 	else return true;
@@ -140,19 +141,19 @@ checkValidSize = function(sizeVal){
 
 //check validity of coordinates
 checkValidCords = function(coordinates){
-	
+
 	//Temporary v
 	return true;
-	
+
 	var coord1 = coordinates[0];
 	var coord2 = coordinates[1];
 	var xMax = canvas.width;
 	var yMax = canvas.height;
-	
-	
+
+
 	if((coord1 <= xMax) && (coord1 >= 0) && (coord2 <= yMax) && (coord2 >= 0)){
 	return true;
-	
+
 	}
 	console.log("not valid coords");
 	console.log(coord1 + "    xmax: " + xMax);

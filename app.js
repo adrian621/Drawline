@@ -79,8 +79,10 @@ app.post('/username', function(req, res, next){
 
 //Read local server canvas at server startup
 server.on('listening', function () {
+    room_Control.init();
     read_canvas();
 });
+
 //Set up server to listen to port 2000
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
@@ -88,8 +90,7 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 //console.log(io.sockets.adapter.rooms);
-  socket.curr_room = socket.id;
-  room_Control.roomFunctions({type: 'newRoom', roomName: 'main'}, socket, io);
+  init_client(socket);
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
@@ -104,6 +105,7 @@ console.log('client connected');
 	socket.on('disconnect', function(){
     socket.leave(socket.curr_room);
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+    room_Control.roomFunctions({type: 'leaveRoom'}, socket, io);
     room_Control.sendRooms(socket, io);
 	});
 
@@ -156,4 +158,10 @@ function read_canvas(){
 
 		}
   });
+}
+
+function init_client(socket){
+  socket.curr_room = socket.id;
+
+  room_Control.roomFunctions({type: 'joinRoom', roomName: 'main'}, socket, io);
 }

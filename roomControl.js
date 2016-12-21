@@ -29,6 +29,10 @@ room_Control.roomFunctions = function(data, socket, io){
 
     case 'leaveRoom':
       leaveRoom(socket);
+    break;
+
+    default:
+    break;
   }
 }
 
@@ -37,7 +41,7 @@ room_Control.sendRooms = function (socket, io){
   for(var roomId in io.sockets.adapter.rooms){
     roomIds.push([roomId, io.sockets.adapter.rooms[roomId].length]);
   }
-  io.emit('rooms', roomIds);
+  io.emit('rooms', [roomIds, socket.curr_room]);
 }
 
 function removeRoom(roomId){
@@ -53,7 +57,7 @@ function removeRoom(roomId){
     return;
   }
 
-  console.log("COULDNT FIND ROOM IN SERVERS ROOM LIST! KNAS");
+  console.log("COULDNT FIND ROOM" + roomId + "IN SERVERS ROOM LIST! KNAS");
 }
 
 function addUserToRoom(roomId, socket){
@@ -66,9 +70,8 @@ function addUserToRoom(roomId, socket){
 }
 
 function removeUserFromRoom(roomId, socket){
-  console.log("room id in remove user from room: " + roomId);
   var room = roomFromId(roomId);
-  console.log("room in remove user from room: " + room);
+
   if(room == undefined)
     return;
 
@@ -79,7 +82,6 @@ function removeUserFromRoom(roomId, socket){
   //remove
   if (index > -1) {
     room.clients.splice(index, 1);
-    console.log("removed " + socket.id);
     //remove room from servers room list if no users connected
     if(room.clients.length == 0)
       removeRoom(roomId);
@@ -100,7 +102,18 @@ function roomFromId(roomId){
       return rooms[i];
   }
 
-  console.log("could not find " + roomId);
+  console.log("could not find roomid" + roomId);
+}
+
+room_Control.roomFromName = function(roomName){
+  var roomId = roomIdFromName(roomName);
+  return roomFromId(roomId);
+}
+
+room_Control.canvasFromRoomName = function(roomName){
+  var room = this.roomFromName(roomName);
+
+  return room.canvas;
 }
 
 function createRoom(data, io, socket){
@@ -122,6 +135,10 @@ function createRoom(data, io, socket){
 
   socket.curr_room = data.roomName;
 
+  //emit newly created room to client
+  var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
+  socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
+
 }
 
 function joinRoom(data, io, socket){
@@ -141,12 +158,14 @@ function joinRoom(data, io, socket){
 
 
   socket.curr_room = data.roomName;
-  console.log(rooms);
+
+  //emit rooms current canvas to client
+  var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
+  socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
 }
 
 function leaveRoom(socket){
   curr_room = socket.curr_room;
   roomId = roomIdFromName(curr_room);
   removeUserFromRoom(roomId, socket);
-  console.log(rooms);
 }

@@ -9,11 +9,14 @@ var rName = document.getElementById('roomName');
 var table = document.getElementById("roomList");
 
 
-socket.on('rooms', function(data){
+socket.on('rooms', function(data_){
   var table = document.getElementById("roomList");
 
   var new_tbody = document.createElement('tbody');
   var old_tbody = table.tBodies[0];
+
+  var data = data_[0];
+  var curr_room = data_[1];
 
   for(var i = 0; i < data.length; i++){
     var row = new_tbody.insertRow(0);
@@ -32,6 +35,16 @@ socket.on('rooms', function(data){
 
   old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
 
+  var curr = document.getElementById("curr");
+  curr.innerHTML = "";
+
+  var h = document.createElement('h4');
+  h.className = "title is-4";
+  h.id = "rListTitle";
+  var text = document.createTextNode("You are in " + curr_room);
+  h.appendChild(text);
+  curr.appendChild(h);
+
 });
 
 
@@ -43,12 +56,11 @@ cRoomBut.onclick = function(){
   document.getElementById('newRoomInfo').style.display = "none";
   document.getElementById('newRoomInfo').style.top = "0";
   document.getElementById('newRoomInfo').style.marginLeft = "0";
-  socket.emit('newRoom',{type: 'newRoom', roomName: rName.value})
+  socket.emit('newRoom',{type: 'newRoom', roomName: rName.value});
 }
 
 //Check what room the client clicked and join
 $(table).on("click", ".roomEntry", function(e){
   var roomToJoin = $(e.target).text();
   socket.emit('newRoom',{type: 'joinRoom', roomName: roomToJoin});
-  socket.emit('wantCanvas');
 });

@@ -1,26 +1,21 @@
 <html>
 	<head>
-		<title>Drawline</title>
+		<title>Drawline Beta</title>
 
 		<script src = "/socket.io/socket.io.js"></script>
 		<script src = "../scripts/indexScript.js"></script>
-
+		<link rel="stylesheet" type="text/css" href="css/bulma.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/indexstyle.css">
 	</head>
 
 	<body>
-		<!--
-		<form id = "nameFormId">
-		<input id = "nameInputId" type = "text" name = "user_name" placeholder = "Write your name here">
-		<input id = "nameSubmitId"type = "submit" value=  "Go draw!" name = "sub_button">
-		</form>
-		-->
-		
-		
-		<form id = "nameFormId" action = "/username" method = "post">
-		<input id = "nameInputId" type = "text" name = "user_name" placeholder = "Write your name here!!">
-		<input id = "nameSubmitId"type = "submit" value=  "Go draw!" name = "sub_button">
-		</form>
+		<div id="container">
+			<h1 class="title is-1" id = "indexDrawline">Drawline</h1>
+			<form id = "nameFormId" action = "/username" method = "post">
+			<input class = "input" id = "nameInputId" type = "text" name = "user_name" placeholder = "Write your name here">
+			<input class="button is-success" id = "nameSubmitId"type = "submit" value=  "Go draw" name = "sub_button">
+			</form>
+		</div>
 	<div id "info"> </div>
 	</body>
 

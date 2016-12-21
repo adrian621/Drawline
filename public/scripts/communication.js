@@ -9,14 +9,11 @@ var rName = document.getElementById('roomName');
 var table = document.getElementById("roomList");
 
 
-socket.on('rooms', function(data_){
+socket.on('rooms', function(data){
   var table = document.getElementById("roomList");
 
   var new_tbody = document.createElement('tbody');
   var old_tbody = table.tBodies[0];
-
-  var data = data_[0];
-  var curr_room = data_[1];
 
   for(var i = 0; i < data.length; i++){
     var row = new_tbody.insertRow(0);
@@ -34,20 +31,20 @@ socket.on('rooms', function(data_){
   }
 
   old_tbody.parentNode.replaceChild(new_tbody, old_tbody);
+});
 
+socket.on('currRoom', function(data){
   var curr = document.getElementById("curr");
   curr.innerHTML = "";
 
   var h = document.createElement('h4');
   h.className = "title is-4";
   h.id = "rListTitle";
-  var text = document.createTextNode("You are in " + curr_room);
+  var text = document.createTextNode("You are in " + data);
   h.appendChild(text);
   curr.appendChild(h);
 
-});
-
-
+})
 socket.on('connect', function(){
   socket.emit('wantRooms');
 });

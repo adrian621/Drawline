@@ -41,7 +41,8 @@ room_Control.sendRooms = function (socket, io){
   for(var roomId in io.sockets.adapter.rooms){
     roomIds.push([roomId, io.sockets.adapter.rooms[roomId].length]);
   }
-  io.emit('rooms', [roomIds, socket.curr_room]);
+  io.emit('rooms', roomIds);
+
 }
 
 function removeRoom(roomId){
@@ -138,7 +139,8 @@ function createRoom(data, io, socket){
   //emit newly created room to client
   var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
   socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
-
+  socket.emit('currRoom', socket.curr_room);
+  
 }
 
 function joinRoom(data, io, socket){
@@ -162,6 +164,7 @@ function joinRoom(data, io, socket){
   //emit rooms current canvas to client
   var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
   socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
+  socket.emit('currRoom', socket.curr_room);
 }
 
 function leaveRoom(socket){

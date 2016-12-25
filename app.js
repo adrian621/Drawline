@@ -9,8 +9,32 @@ var expressValidator = require('express-validator');
 var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
+var room_Control = require('./roomControl.js');
+//Database:
+var mongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://jaki:123@ds141368.mlab.com:41368/heroku_b774r87n';
 
-
+//Try to connect to MongoDB Database
+mongoClient.connect(url, function(err, db) {
+	if(err) {
+		console.log(err);
+		return;
+	}
+	
+	else {
+		console.log('MongoDB succesfully connected.');
+		db.createCollection('User', function(err, collection) {});
+		db.collection('User').insert({'user':'ADMIN', "socketID":0});
+		console.log('COLLECTION: User, created.');
+		db.createCollection('UserMove', function(err, collection) {});
+		db.collection('UserMove').insert({'socketID':0, 'move':[0,0]});
+		console.log('COLLECTION: UserMove, created.');
+	}
+	
+	
+	//Uncomment when it's working
+	db.close();
+});
 //All routes moved to this module.
 //var routes = require('./routes')(app); will use this next push
 
@@ -79,8 +103,10 @@ app.post('/username', function(req, res, next){
 
 //Read local server canvas at server startup
 server.on('listening', function () {
+    room_Control.init();
     read_canvas();
 });
+
 //Set up server to listen to port 2000
 server.listen(process.env.PORT || 2000);
 console.log('server is running');
@@ -88,6 +114,7 @@ console.log('server is running');
 io.sockets.on('connection', function(socket){
 console.log('client connected');
 //console.log(io.sockets.adapter.rooms);
+  init_client(socket);
 
 	//Standard syntax for socket (type(drawControl or userSocket) {data});
 	socket.on('drawControl', function(data){
@@ -100,11 +127,25 @@ console.log('client connected');
 	});
 
 	socket.on('disconnect', function(){
+    socket.leave(socket.curr_room);
 		user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
+    room_Control.roomFunctions({type: 'leaveRoom'}, socket, io);
+    room_Control.sendRooms(socket, io);
 	});
 
-	socket.on('room', function(data){
-    socket.join(data);
+  socket.on('wantRooms', function(){
+    room_Control.sendRooms(socket, io);
+  });
+
+  socket.on('newRoom', function(data){
+    //skapa rum
+    room_Control.roomFunctions(data, socket, io);
+    room_Control.sendRooms(socket, io);
+  });
+
+  socket.on('joinRoom', function(data){
+    room_Control.roomFunctions(data, socket, io);
+    room_Control.sendRooms(socket, io);
   });
 
 
@@ -141,4 +182,10 @@ function read_canvas(){
 
 		}
   });
+}
+
+function init_client(socket){
+  socket.curr_room = socket.id;
+
+  room_Control.roomFunctions({type: 'joinRoom', roomName: 'main'}, socket, io);
 }

@@ -23,6 +23,7 @@
 #drawline{display:inline; font-size:35px; padding-right:15%; color: white;}
 #create{padding-bottom:40px; text-align:center;}
 #cRoom{left:50%; transform: translate(-50%, 0); margin-top:10px;}
+
 #roomsContainer{padding:0;height:0; width:0; background-color:#f2f0ee; display:none; position:absolute; z-index:3; transition: 1s;
     top: 0;
     left: 0;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Drawline</title>
+		<title>Drawline Beta</title>
 		<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
 		<script src="../scripts/jscolor.js"></script>
 		<script src="https://rawgit.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
@@ -18,7 +18,7 @@
 					<label id = "rLabel" class="label">Room Name</label>
 						<p class="control">
 						  <input id = "roomName" class="input" type="text" placeholder="Name">
-							<a class="button is-success" id="cRoom"> Create </a>
+						  <a href="javascript:void(0)" class="button is-success" id="cRoom"> Create </a>
 						</p>
 				</div>
 				<div id="roomsHeader">
@@ -26,6 +26,7 @@
 					<a href="javascript:void(0)" class="closebtn" onclick="hideRooms()">&times;</a>
 				</div>
 				<h2 id="rListTitle" class="title is-2">Rooms</h2>
+				<div id="curr"></div>
 				<table id = "roomList" class="table">
 					<thead>
 				    <tr>

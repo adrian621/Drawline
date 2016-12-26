@@ -115,14 +115,20 @@ console.log('client connected');
 
   socket.on('newRoom', function(data){
     //skapa rum
+    user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
     room_Control.roomFunctions(data, socket, io);
     room_Control.sendRooms(socket, io);
+    user_Control.userFunctions({type: 'newUser', metaType: 'changeRoom'}, socket, io);
   });
 
   socket.on('joinRoom', function(data){
+    user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
     room_Control.roomFunctions(data, socket, io);
     room_Control.sendRooms(socket, io);
+    user_Control.userFunctions({type: 'newUser', metaType: 'changeRoom'}, socket, io);
   });
+
+  
 
 
 });

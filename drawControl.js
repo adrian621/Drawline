@@ -15,8 +15,11 @@ draw_Control.newCanvas = function(){
 		return canvaz;
 }
 
-draw_Control.clearCanvas = function(){
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+draw_Control.clearCanvas = function(socket){
+	var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
+	var roomCtx = roomCanvas.getContext("2d");
+
+	roomCtx.clearRect(0, 0, roomCanvas.width, roomCanvas.height);
 }
 
 draw_Control.drawFunctions = function(data, socket, io, rtt){

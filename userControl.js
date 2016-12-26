@@ -1,22 +1,35 @@
 var user_Control = module.exports = {};
 var draw_Control = require('./drawControl');
+var roomControl = require('./roomControl');
 
 user_Control.userFunctions = function(data, socket, io){
 		switch(data.type){
 			case 'newUser':
+				if(data.username != undefined)
+					socket.username = data.username;
+
 				//add user to list of users
 				addToUserList(data, socket);
-				//add user vote list of users
-				initUserVote(socket);
+
 				//send new userList to all clients
-				io.emit('onlineUsers', {users:onlineUsers.userNames});
+				var roomIndex = roomIndexOf(socket.curr_room);
+
+				if(roomIndex == -1){
+					return;
+				}
+
+				initUserVote(socket);
+
+
+
+				io.sockets.in(socket.curr_room).emit('onlineUsers', {users:onlineUsers[roomIndex].userNames});
 				//send new vote stats to all clients
-				io.emit('voteStats', checkUsersVotes());
+				io.sockets.in(socket.curr_room).emit('voteStats', checkUsersVotes(socket));
 				break;
 
 			case 'userChange':
 				changeUserVote(socket, io);
-				checkUsersVotes();
+				checkUsersVotes(socket);
 				//Finns nog bättre ställe att sätta den:
 				checkIfChangable(io, socket);
 				break;
@@ -27,51 +40,80 @@ user_Control.userFunctions = function(data, socket, io){
 			}
 }
 
-var onlineUsers = {
-	userNames:[],
-	ids:[],
-	votes:[],
-};
+//object array! one element for every room  like this: {
+//	room: '',
+//	userNames:[],
+//	ids:[],
+//	votes:[],
+//}
+var onlineUsers = [];
 
-var unlineUsersVote = {
-	ids:[],
-	votes:[],
-};
 
 // ************ FUNCTIONS FOR HANDLING USERS VOTES       ***************************
+
 initUserVote = function(socket) {
-	onlineUsers.votes.push(false);
+	var roomIndex = roomIndexOf(socket.curr_room);
+	if(roomIndex == -1)
+		return;
+
+	onlineUsers[roomIndex].votes.push(false);
+
 	socket.emit('curr_vote', false);
 }
 
+roomIndexOf = function(roomName){
+	for(var i = 0; i < onlineUsers.length; i++){
+		if(onlineUsers[i].room == roomName)
+			return i;
+	}
+
+	return -1;
+}
 changeUserVote = function(socket, io) {
-	//Go through all users and find the one who changes their mind.
-	for (var i = 0; i < onlineUsers.votes.length; i++) {
+
+	var roomIndex = roomIndexOf(socket.curr_room);
+	if(roomIndex == -1){
+		return;
+	}
+
+	//Go through all users in this clients room and find the one who changes their mind.
+	for (var i = 0; i < onlineUsers[roomIndex].votes.length; i++) {
 		//When the user is find change the vote to the opposite of what it is.
-		if(onlineUsers.ids[i] == socket.id) {
-			onlineUsers.votes[i] = !onlineUsers.votes[i];
-			socket.emit('curr_vote', onlineUsers.votes[i]);
-			io.emit('voteStats', checkUsersVotes());
+		if(onlineUsers[roomIndex].ids[i] == socket.id) {
+			onlineUsers[roomIndex].votes[i] = !onlineUsers[roomIndex].votes[i];
+			socket.emit('curr_vote', onlineUsers[roomIndex].votes[i]);
+			io.sockets.in(socket.curr_room).emit('voteStats', checkUsersVotes(socket));
+
 			return;
 		}
 	}
 }
 
-setAllFalse = function(io) {
-	for(var i=0; i<onlineUsers.votes.length; i++) {
-		onlineUsers.votes[i] = false;
-		io.emit('curr_vote', false);
+setAllFalse = function(io, socket) {
+	var roomIndex = roomIndexOf(socket.curr_room);
+
+	if(roomIndex == -1)
+		return;
+
+	for(var i=0; i<onlineUsers[roomIndex].votes.length; i++) {
+		onlineUsers[roomIndex].votes[i] = false;
+		io.sockets.in(socket.curr_room).emit('curr_vote', false);
 	}
 }
 
 //Returns the % of TRUE votes.
 //This is done by dividing the amount of TRUE votes with the number of online users.
-checkUsersVotes = function() {
-	var userAmount = onlineUsers.votes.length;
+checkUsersVotes = function(socket) {
+	var roomIndex = roomIndexOf(socket.curr_room);
+
+	if(roomIndex == -1)
+		return;
+
+	var userAmount = onlineUsers[roomIndex].votes.length;
 	var trueVotes = 0;
 
 	for(var i=0; i<userAmount; i++) {
-		if(onlineUsers.votes[i] == true) {
+		if(onlineUsers[roomIndex].votes[i] == true) {
 			trueVotes++;
 		}
 	}
@@ -82,50 +124,87 @@ checkUsersVotes = function() {
 	return (trueVotes/userAmount);
 }
 
-checkIfChangable = function(io) {
-	if(checkUsersVotes() > 0.5) {
-		setAllFalse(io);
-		io.emit('ext_clear');
-		io.emit('voteStats', checkUsersVotes());
-		draw_Control.clearCanvas();
+checkIfChangable = function(io, socket) {
+	if(checkUsersVotes(socket) > 0.5) {
+		setAllFalse(io, socket);
+		io.sockets.in(socket.curr_room).emit('ext_clear');
+		io.sockets.in(socket.curr_room).emit('voteStats', checkUsersVotes(socket));
+		draw_Control.clearCanvas(socket);
 	}
 }
 
 // ************ FUNCTIONS FOR HANDLING USERNAMES AND IDS ***************************
 
+//check if room is in onlineUsers. used to check if we need to add new room to onlineUsers
+roomIsInList = function(roomName){
+	for(var i = 0; i < onlineUsers.length; i++){
+		if(onlineUsers[i].room == roomName)
+			return true;
+	}
+
+	return false;
+}
+
+
 addToUserList = function(data, socket){
-	username = checkUserNameValidity(data.username);
-	onlineUsers.userNames.push(username);
-	//console.log(onlineUsers.userNames);
-	onlineUsers.ids.push(socket.id);
+	var username = checkUserNameValidity(socket.username);
+
+	//add room to onlineUsers if room is not already in list
+	if(roomIsInList(socket.curr_room) == false){
+
+		var newRoom = {room: socket.curr_room, userNames:[], ids:[], votes:[]};
+		onlineUsers.push(newRoom);
+	}
+
+	var roomIndex = roomIndexOf(socket.curr_room);
+
+	if(roomIndex == -1){
+		return;
+	}
+
+	onlineUsers[roomIndex].userNames.push(username);
+
+	onlineUsers[roomIndex].ids.push(socket.id);
 
 }
 
 checkUserNameValidity = function(username){
-console.log(username);
+
 	if(username === undefined || username === null || username === ""){
-	return "guest";
+		return "guest";
 	}
 	if(username.length > 10){
-	return username.substring(0,10);
+		return username.substring(0,10);
 	}
 	else{
-	return username;
+		return username;
 }
 
 
 }
 
 
-removeFromUserList = function(data, io){
-	for (var i = 0; i < onlineUsers.userNames.length; i++) {
-		if (onlineUsers.ids[i] == data.id) {
-			 //console.log("CLIENT " + onlineUsers[i].id +" DISCONNECTED AND WAS REMOVED");
-			 onlineUsers.ids.splice(i, 1);
-			 onlineUsers.userNames.splice(i, 1);
-			 onlineUsers.votes.splice(i,1);
-			 io.emit('onlineUsers', {users:onlineUsers.userNames});
+removeFromUserList = function(socket, io){
+	var roomIndex = roomIndexOf(socket.curr_room);
+	if(roomIndex == -1){
+		return;
+	}
+
+	for (var i = 0; i < onlineUsers[roomIndex].userNames.length; i++) {
+
+		if (onlineUsers[roomIndex].ids[i] == socket.id) {
+			 //console.log("CLIENT " + onlineUsers[roomIndex].ids[i] +" DISCONNECTED AND WAS REMOVED");
+			 onlineUsers[roomIndex].ids.splice(i, 1);
+			 onlineUsers[roomIndex].userNames.splice(i, 1);
+			 onlineUsers[roomIndex].votes.splice(i,1);
+			 io.sockets.in(socket.curr_room).emit('onlineUsers', {users:onlineUsers[roomIndex].userNames});
+
+			 if(onlineUsers[roomIndex].ids.length == 0 && onlineUsers[roomIndex].room != 'main')
+			 	onlineUsers.splice(roomIndex,1);
+
+
 			 return;
 		}
 	}
+
 }

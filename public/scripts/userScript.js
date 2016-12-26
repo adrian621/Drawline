@@ -26,6 +26,7 @@ emitUserName = function(userName){
 //Körs när sidan laddas
 window.onload = function(){
 	var userName = getUserName();
+	
 	emitUserName(userName);
 }
 

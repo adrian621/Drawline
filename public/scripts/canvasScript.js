@@ -1,4 +1,3 @@
-
 var canvas = document.getElementById('canvas');
 
 
@@ -24,7 +23,8 @@ var dBut = document.getElementById("downloadBut");
 window.addEventListener('load', function(e){
 	init_page()}, false);
 
-
+canvas.addEventListener('contextmenu', function(e){
+	getPixelColor('rightClick', e)}, false);
 canvas.addEventListener("mousedown", function(e){
 	findMove('down', e);}, false);
 canvas.addEventListener("mousemove", function(e){
@@ -127,30 +127,57 @@ function draw_ext(data, resolution){
 	ctx.stroke();
   }
 }
+
+function getPixelColor(res, e) {
+	e.preventDefault();
+	var cordX = e.clientX - rect.left;
+	var cordY = e.clientY - rect.top;
+	var pixelData = ctx.getImageData(cordX, cordY, 1, 1).data;
+	//Get the Red, Green, Blue density of the pixel.
+	//****var hex = "#" + ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
+	var hex = ("000000" + rgbToHex(pixelData[0], pixelData[1], pixelData[2])).slice(-6);
+	//var color = new Color([pixelData[0], pixelData[1], pixelData[2]]);
+	//Convert to HEX-decimal and return
+	document.getElementById('color').value = hex;
+	//return "#" + componentToHex(color[0]) + componentToHex(color[1]) + componentToHex(color[2]);
+
+}
+
+function rgbToHex(r, g, b) {
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component";
+    return ((r << 16) | (g << 8) | b).toString(16);
+}
+
 function findMove(res, e) {
 	if(res == 'down') {
-		document.getElementById("mySidenav").style.width = "0";
-		//Set old mouse coordinates to "new" previous coordinates
-		prevCordX = newCordX;
-		prevCordY = newCordY;
-		//Current relative mouse coordinates
-		newCordX = e.clientX - rect.left;
-		newCordY = e.clientY - rect.top;
+		if(e.button === 2 || e.button == 2) {
+			getPixelColor(res, e);
+		}
+		else {
+			document.getElementById("mySidenav").style.width = "0";
+			//Set old mouse coordinates to "new" previous coordinates
+			prevCordX = newCordX;
+			prevCordY = newCordY;
+			//Current relative mouse coordinates
+			newCordX = e.clientX - rect.left;
+			newCordY = e.clientY - rect.top;
 
-		//Add brush color and size as first element in coordinates array.
-		coordinates.push(size.value, "#"+color.value);
-		frst_coord_tuple = [newCordX, newCordY];
-		coordinates.push(frst_coord_tuple);
-		flag = true;
-		dot_flag = true;
+			//Add brush color and size as first element in coordinates array.
+			coordinates.push(size.value, "#"+color.value);
+			frst_coord_tuple = [newCordX, newCordY];
+			coordinates.push(frst_coord_tuple);
+			flag = true;
+			dot_flag = true;
 
-		if(dot_flag) {
-			ctx.beginPath();
-			ctx.fillStyle = "black";
-			ctx.fillRect = (newCordX, newCordY, size.value, size.value);
-			ctx.closePath();
-			dot_flag = false;
-			coordinates.push([newCordX, newCordY]);
+			if(dot_flag) {
+				ctx.beginPath();
+				ctx.fillStyle = "black";
+				ctx.fillRect = (newCordX, newCordY, size.value, size.value);
+				ctx.closePath();
+				dot_flag = false;
+				coordinates.push([newCordX, newCordY]);
+			}
 		}
 	}
 

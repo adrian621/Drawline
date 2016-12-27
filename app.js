@@ -10,6 +10,7 @@ var bodyParser = require ('body-parser');
 var draw_Control = require('./drawControl');
 var user_Control = require('./userControl');
 var room_Control = require('./roomControl.js');
+
 //Database:
 var mongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://jaki:123@ds141368.mlab.com:41368/heroku_b774r87n';
@@ -20,7 +21,7 @@ mongoClient.connect(url, function(err, db) {
 		console.log(err);
 		return;
 	}
-	
+
 	else {
 		console.log('MongoDB succesfully connected.');
 		db.createCollection('User', function(err, collection) {});
@@ -30,8 +31,8 @@ mongoClient.connect(url, function(err, db) {
 		db.collection('UserMove').insert({'socketID':0, 'move':[0,0]});
 		console.log('COLLECTION: UserMove, created.');
 	}
-	
-	
+
+
 	//Uncomment when it's working
 	db.close();
 });
@@ -138,14 +139,17 @@ console.log('client connected');
   });
 
   socket.on('newRoom', function(data){
-    //skapa rum
+    user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
     room_Control.roomFunctions(data, socket, io);
     room_Control.sendRooms(socket, io);
+    user_Control.userFunctions({type: 'newUser'}, socket, io);
   });
 
   socket.on('joinRoom', function(data){
+    user_Control.userFunctions({type: 'userDisconnect'}, socket, io);
     room_Control.roomFunctions(data, socket, io);
     room_Control.sendRooms(socket, io);
+    user_Control.userFunctions({type: 'newUser'}, socket, io);
   });
 
 

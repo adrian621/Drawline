@@ -102,8 +102,6 @@ function roomFromId(roomId){
     if(rooms[i].id == roomId)
       return rooms[i];
   }
-
-  console.log("could not find roomid" + roomId);
 }
 
 room_Control.roomFromName = function(roomName){
@@ -140,7 +138,6 @@ function createRoom(data, io, socket){
   var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
   socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
   socket.emit('currRoom', socket.curr_room);
-  
 }
 
 function joinRoom(data, io, socket){

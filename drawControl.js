@@ -18,6 +18,7 @@ mongoClient.connect(url, function(err, db) {
 	mongoDB = db;
 });
 
+
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
 }
@@ -28,8 +29,12 @@ draw_Control.newCanvas = function(){
 		return canvaz;
 }
 
-draw_Control.clearCanvas = function(){
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+draw_Control.clearCanvas = function(socket){
+	var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
+	var roomCtx = roomCanvas.getContext("2d");
+
+	roomCtx.clearRect(0, 0, roomCanvas.width, roomCanvas.height);
 }
 
 draw_Control.drawFunctions = function(data, socket, io, rtt){
@@ -43,6 +48,7 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		  if(controlValidCordinates(data.coord_data, socket)){
 				//io.emit('ext_coordinates', [data.coord_data, data.resolution]);
 				io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
+
 				mongoDB.collection('UserMove').insert({'socketID':socket.id, "move":data.coord_data, "res":data.resolution});
 			//	io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution}, socket);

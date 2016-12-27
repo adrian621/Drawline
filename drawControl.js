@@ -4,6 +4,20 @@ var room_Control = require('./roomControl');
 
 var Canvas = require('canvas'), canvas = new Canvas(1,1), ctx = canvas.getContext('2d'), Image = Canvas.Image;
 
+//Everything for MongoDB
+var mongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://jaki:123@ds141368.mlab.com:41368/heroku_b774r87n';
+var mongoDB;
+
+//Connect to MongoDB
+mongoClient.connect(url, function(err, db) {
+	if(err) {
+		console.log(err);
+		return;
+	}
+	mongoDB = db;
+});
+
 
 draw_Control.getServerCanvas = function(){
 	return canvas.toDataURL();
@@ -14,6 +28,7 @@ draw_Control.newCanvas = function(){
 		var canvaz = new Canvas(1, 1);
 		return canvaz;
 }
+
 
 draw_Control.clearCanvas = function(socket){
 	var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
@@ -34,8 +49,12 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 				//io.emit('ext_coordinates', [data.coord_data, data.resolution]);
 				io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 
+				mongoDB.collection('UserMove').insert({'socketID':socket.id, "move":data.coord_data, "res":data.resolution});
 			//	io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution}, socket);
+				//Save serverCanvas as URL in MongoDB
+				var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
+				mongoDB.collection('User').update({'user':'ADMIN'}, {'socketID':roomCanvas.toDataURL(), 'user':'ADMIN'});
 		  }
 			break;
 

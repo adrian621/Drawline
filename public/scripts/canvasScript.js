@@ -134,7 +134,7 @@ function draw_ext(data, resolution, brush){
 		break;
 
 		case 'Japanese':
-			sizeVal = sizeVal/3;
+			sizeVal = sizeVal/4;
 
 			for (var i = 3; i < data.length; i++) {
 				var tmp = data[i];
@@ -356,7 +356,7 @@ function draw(bStyle) {
 		break;
 
 		case 'Japanese':
-			var sizeVal = size.value/3;
+			var sizeVal = size.value/4;
 
 			ctx.beginPath();
 			ctx.fillStyle = "#"+color.value;

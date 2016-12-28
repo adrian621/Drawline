@@ -126,7 +126,7 @@ function drawServerCanvas(data, socket){
 			break;
 
 			case 'Japanese':
-				var sizeVal = data.cnv_data[0]/3;
+				var sizeVal = data.cnv_data[0]/4;
 				var colorVal = data.cnv_data[1];
 
 				var width = data.resolution[0];

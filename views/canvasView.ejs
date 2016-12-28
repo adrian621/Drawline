@@ -49,22 +49,35 @@
 					<p id="drawline"> Drawline </p>
 				  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 				</div>
+
 				<a id="create" onclick="showRooms()"><h2>List of rooms</h2></a>
+
 				<p> Size </p>
 			  <input type="range" id="size" min="2" value="10" max="30" step="2">
+
 				<div id="colorDiv">
 				  <p>Color</p>
 				  <input id = "color" class="jscolor" value="ab2567">
 				</div>
+
+				<div class="dropdown">
+				  <button class="button is-primary">Brushes</button>
+				  <div class="dropdown-content">
+				    <p id="Normal">Normal</p>
+				    <p id="Japanese">Japanese</p>
+				  </div>
+				</div>
+
+				<h3 class="title is-3" id="voteHeader"> Clear canvas? </h3>
 				<progress class = "progress is-primary"  id="vStats" max="100"></progress>
 				<p id="specificUserVote"></p>
-				<div id="voteContainer"> <input id = "voteButtonID" class="button is-primary"type = "button" value = "Change vote" name = "vote_button"></div>
+				<div id="voteContainer"> <input id = "voteButtonID" class="button is-primary" type = "button" value = "Change vote" name = "vote_button"></div>
 				<div id="usersDiv">
 					<p id = "usersHeader">Online Users</p>
 					<ul id = onlineUsersList></ul>
 				</div>
 				<div id="downloadContainer">
-					<input id="downloadBut" value="Download painting" type="button"></input>
+					<input class="button is-light" id="downloadBut" value="Download painting" type="button"></input>
 				</div>
 			</div>
 

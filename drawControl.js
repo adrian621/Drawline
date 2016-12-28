@@ -47,14 +47,16 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 		case 'coordinates':
 		  if(controlValidCordinates(data.coord_data, socket)){
 				//io.emit('ext_coordinates', [data.coord_data, data.resolution]);
-				io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
+			//	io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
 
 				mongoDB.collection('UserMove').insert({'socketID':socket.id, "move":data.coord_data, "res":data.resolution});
-			//	io.to(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
-		 	 	drawServerCanvas({type: 'coordData', cnv_data: data.coord_data, resolution: data.resolution}, socket);
+				io.to(socket.curr_room).emit('ext_coordinates', {coordData: data.coord_data, resolution: data.resolution, brush: data.brush});
+
+		 	 	drawServerCanvas({type: 'coordData', brush: data.brush, cnv_data: data.coord_data, resolution: data.resolution}, socket);
+
 				//Save serverCanvas as URL in MongoDB
 				var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
-				mongoDB.collection('User').update({'user':'ADMIN'}, {'socketID':roomCanvas.toDataURL(), 'user':'ADMIN'});
+			  mongoDB.collection('User').update({'user':'ADMIN'}, {'socketID':roomCanvas.toDataURL(), 'user':'ADMIN'});
 		  }
 			break;
 
@@ -79,44 +81,93 @@ function drawServerCanvas(data, socket){
 	var roomCtx = roomCanvas.getContext("2d");
 
 	if(data.type == 'coordData'){
-		var sizeVal = data.cnv_data[0];
-		var colorVal = data.cnv_data[1];
 
-		var width = data.resolution[0];
-		var height = data.resolution[1];
+		switch(data.brush){
+			case 'Normal':
+				var sizeVal = data.cnv_data[0];
+				var colorVal = data.cnv_data[1];
 
-		var scaleX = roomCanvas.width/width;
-		var scaleY = roomCanvas.height/height;
+				var width = data.resolution[0];
+				var height = data.resolution[1];
 
-		//Let server's canvases grow dynamically as it receives coordinates
-		if(width > roomCanvas.width)
-			roomCanvas.width = width;
+				var scaleX = roomCanvas.width/width;
+				var scaleY = roomCanvas.height/height;
 
-		if(height > roomCanvas.height)
-			roomCanvas.height = height;
+				//Let server's canvases grow dynamically as it receives coordinates
+				if(width > roomCanvas.width)
+					roomCanvas.width = width;
 
-	  for (var i = 3; i < data.cnv_data.length; i++) {
-			var tmp = data.cnv_data[i];
-	    var prev_tmp = data.cnv_data[i-1];
+				if(height > roomCanvas.height)
+					roomCanvas.height = height;
 
-	  	curr_x = tmp[0] * scaleX;
-	  	curr_y = tmp[1] * scaleY;
+			  for (var i = 3; i < data.cnv_data.length; i++) {
+					var tmp = data.cnv_data[i];
+			    var prev_tmp = data.cnv_data[i-1];
 
-			//LÄGG TILL I VALIDCOORDCHECK
-			//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
-			if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
-				return;
+			  	curr_x = tmp[0] * scaleX;
+			  	curr_y = tmp[1] * scaleY;
 
-	    prev_x = prev_tmp[0]*scaleX;
-	    prev_y = prev_tmp[1]*scaleY;
+					//LÄGG TILL I VALIDCOORDCHECK
+					//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+					if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
+						return;
 
-	    roomCtx.beginPath();
-			roomCtx.lineCap = "round";
-	    roomCtx.moveTo(prev_x, prev_y);
-	    roomCtx.lineTo(curr_x, curr_y);
-	    roomCtx.lineWidth = sizeVal;
-	    roomCtx.strokeStyle = colorVal;
-	    roomCtx.stroke();
+			    prev_x = prev_tmp[0]*scaleX;
+			    prev_y = prev_tmp[1]*scaleY;
+
+			    roomCtx.beginPath();
+					roomCtx.lineCap = "round";
+			    roomCtx.moveTo(prev_x, prev_y);
+			    roomCtx.lineTo(curr_x, curr_y);
+			    roomCtx.lineWidth = sizeVal;
+			    roomCtx.strokeStyle = colorVal;
+			    roomCtx.stroke();
+				}
+			break;
+
+			case 'Japanese':
+				var sizeVal = data.cnv_data[0]/3;
+				var colorVal = data.cnv_data[1];
+
+				var width = data.resolution[0];
+				var height = data.resolution[1];
+
+				var scaleX = roomCanvas.width/width;
+				var scaleY = roomCanvas.height/height;
+
+				//Let server's canvases grow dynamically as it receives coordinates
+				if(width > roomCanvas.width)
+					roomCanvas.width = width;
+
+				if(height > roomCanvas.height)
+					roomCanvas.height = height;
+
+				for (var i = 3; i < data.cnv_data.length; i++) {
+					var tmp = data.cnv_data[i];
+
+			  	curr_x = tmp[0];
+			  	curr_y = tmp[1];
+					var japRands = tmp[2];
+
+					//LÄGG TILL I VALIDCOORDCHECK
+					//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+					if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
+						return;
+
+
+					roomCtx.beginPath();
+					roomCtx.fillStyle = colorVal;
+					roomCtx.arc(curr_x-japRands[0]*12, curr_y, sizeVal, 0*Math.PI, japRands[1]*2*Math.PI);
+					roomCtx.arc(curr_x+japRands[2]*12, curr_y, sizeVal, 0*Math.PI, japRands[3]*2*Math.PI);
+					roomCtx.arc(curr_x, curr_y-japRands[4]*12, sizeVal, 0*Math.PI, japRands[5]*2*Math.PI);
+					roomCtx.arc(curr_x, curr_y+japRands[6]*12, sizeVal, 0*Math.PI, japRands[7]*2*Math.PI);
+					roomCtx.arc(curr_x, curr_y, sizeVal, 0*Math.PI, japRands[8]*2*Math.PI);
+					roomCtx.closePath();
+					roomCtx.fill();
+
+
+				}
+			break;
 		}
 
 	}

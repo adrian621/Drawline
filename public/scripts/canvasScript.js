@@ -55,6 +55,8 @@ var prevCordY = 0;
 var newCordX = 0;
 var newCordY = 0;
 var dot_flag = false;
+var brushStyle = 'Normal';
+var japRands = [];
 
 //Will look like:
 // coordinates = [[SIZE, COLOR],[x1,y1],[x2,y2]...[xn, yn]]
@@ -98,34 +100,70 @@ socket.on('curr_vote', function(data) {
 });
 
 socket.on('ext_coordinates', function (data){
-  draw_ext(data[0], data[1]);
+  draw_ext(data.coordData, data.resolution, data.brush);
 });
 
-function draw_ext(data, resolution){
+function draw_ext(data, resolution, brush){
 	var sizeVal = data[0];
 	var colorVal = data[1];
 
-	var scaleX = canvas.width/resolution[0];
-	var scaleY = canvas.height/resolution[1];
+	switch(brush){
 
-  for (var i = 3; i < data.length; i++) {
-	prev_temp_data = data[i-1];
-	temp_data = data[i];
+		case 'Normal':
+			var scaleX = canvas.width/resolution[0];
+			var scaleY = canvas.height/resolution[1];
 
-	prev_x = prev_temp_data[0]*scaleX;
-	prev_y = prev_temp_data[1]*scaleY;
+		  for (var i = 3; i < data.length; i++) {
+				prev_temp_data = data[i-1];
+				temp_data = data[i];
 
-	curr_x = temp_data[0]*scaleX;
-	curr_y = temp_data[1]*scaleY;
+				prev_x = prev_temp_data[0]*scaleX;
+				prev_y = prev_temp_data[1]*scaleY;
 
-	ctx.beginPath();
-	ctx.lineCap = "round";
-	ctx.moveTo(prev_x, prev_y);
-	ctx.lineTo(curr_x, curr_y);
-	ctx.lineWidth = sizeVal;
-	ctx.strokeStyle = colorVal;
-	ctx.stroke();
+				curr_x = temp_data[0]*scaleX;
+				curr_y = temp_data[1]*scaleY;
+
+				ctx.beginPath();
+				ctx.lineCap = "round";
+				ctx.moveTo(prev_x, prev_y);
+				ctx.lineTo(curr_x, curr_y);
+				ctx.lineWidth = sizeVal;
+				ctx.strokeStyle = colorVal;
+				ctx.stroke();
+			}
+		break;
+
+		case 'Japanese':
+			sizeVal = sizeVal/3;
+
+			for (var i = 3; i < data.length; i++) {
+				var tmp = data[i];
+
+				curr_x = tmp[0];
+				curr_y = tmp[1];
+				var japRands = tmp[2];
+
+				//LÄGG TILL I VALIDCOORDCHECK
+				//console.log("curr_x   " + curr_x + "    curr_y " + curr_y + "    " + typeof(curr_x));
+				if(typeof(curr_x) != 'number' || typeof(curr_y) != 'number')
+					return;
+
+
+				ctx.beginPath();
+				ctx.fillStyle = colorVal;
+				ctx.arc(curr_x-japRands[0]*12, curr_y, sizeVal, 0*Math.PI, japRands[1]*2*Math.PI);
+				ctx.arc(curr_x+japRands[2]*12, curr_y, sizeVal, 0*Math.PI, japRands[3]*2*Math.PI);
+				ctx.arc(curr_x, curr_y-japRands[4]*12, sizeVal, 0*Math.PI, japRands[5]*2*Math.PI);
+				ctx.arc(curr_x, curr_y+japRands[6]*12, sizeVal, 0*Math.PI, japRands[7]*2*Math.PI);
+				ctx.arc(curr_x, curr_y, sizeVal, 0*Math.PI, japRands[8]*2*Math.PI);
+				ctx.closePath();
+				ctx.fill();
+
+
+			}
+		break;
   }
+
 }
 
 function getPixelColor(res, e) {
@@ -165,26 +203,37 @@ function findMove(res, e) {
 
 			//Add brush color and size as first element in coordinates array.
 			coordinates.push(size.value, "#"+color.value);
-			frst_coord_tuple = [newCordX, newCordY];
+
+			if(brushStyle == 'Japanese'){
+				japRands = [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()];
+				frst_coord_tuple = [newCordX, newCordY, japRands];
+			}
+
+			if(brushStyle == 'Normal')
+				frst_coord_tuple = [newCordX, newCordY];
+
 			coordinates.push(frst_coord_tuple);
+
 			flag = true;
 			dot_flag = true;
 
-			if(dot_flag) {
-				ctx.beginPath();
-				ctx.fillStyle = "black";
-				ctx.fillRect = (newCordX, newCordY, size.value, size.value);
-				ctx.closePath();
-				dot_flag = false;
-				coordinates.push([newCordX, newCordY]);
-			}
+			// if(dot_flag) {
+			// 	ctx.beginPath();
+			// 	ctx.fillStyle = "black";
+			// 	ctx.fillRect = (newCordX, newCordY, size.value, size.value);
+			// 	ctx.closePath();
+			// 	dot_flag = false;
+			// 	coordinates.push([newCordX, newCordY]);
+			// }
 		}
 	}
 
 	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
 	  	//* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
-	 	socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
+
+		socket.emit('drawControl', {type: 'coordinates', brush: brushStyle, coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
+
 		//Clear coordinates
 		coordinates = [];
 
@@ -192,7 +241,6 @@ function findMove(res, e) {
 	}
 
 	if(res == 'move' && flag) {
-
 		//Set old mouse coordinates to "new" previous coordinates
 		prevCordX = newCordX;
 		prevCordY = newCordY;
@@ -201,17 +249,26 @@ function findMove(res, e) {
 		newCordY = e.clientY - rect.top;
 
 		//Save mouse coordinates to send to server
-		coord_tuple = [newCordX, newCordY];
+		if(brushStyle == 'Japanese'){
+			japRands = [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()];
+			coord_tuple = [newCordX, newCordY, japRands];
+
+		}
+
+		if(brushStyle == 'Normal')
+			coord_tuple = [newCordX, newCordY];
+
 		coordinates.push(coord_tuple);
 
 		if(coordinates.length > 50){
-			socket.emit('drawControl', {type: 'coordinates', coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
+			socket.emit('drawControl', {type: 'coordinates', brush: brushStyle, coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
+
 			coordinates = [];
 			coordinates.push(size.value, "#"+color.value);
 			coordinates.push(coord_tuple);
 		}
 
-		draw();
+		draw(brushStyle);
 	}
 }
 
@@ -279,20 +336,39 @@ function touchMove(res, e){
 	}
 }
 
-function draw() {
-	//Both these values will be sent to server
-	var sizeVal = size.value;
-	var colorVal = "#"+color.value;
+function draw(bStyle) {
 
-  ctx.beginPath();
-	ctx.lineCap = "round";
-  ctx.moveTo(prevCordX, prevCordY);
-  ctx.lineTo(newCordX, newCordY);
-  ctx.lineWidth = sizeVal;
-  ctx.strokeStyle = colorVal;
-  ctx.stroke();
+	switch(bStyle){
+		case 'Normal':
+			//Both these values will be sent to server
+			var sizeVal = size.value;
+			var colorVal = "#"+color.value;
 
-	//draw_preview();
+		  ctx.beginPath();
+			ctx.lineCap = "round";
+		  ctx.moveTo(prevCordX, prevCordY);
+		  ctx.lineTo(newCordX, newCordY);
+		  ctx.lineWidth = sizeVal;
+		  ctx.strokeStyle = colorVal;
+		  ctx.stroke();
+
+			//draw_preview();
+		break;
+
+		case 'Japanese':
+			var sizeVal = size.value/3;
+
+			ctx.beginPath();
+			ctx.fillStyle = "#"+color.value;
+			ctx.arc(newCordX-japRands[0]*12, newCordY, sizeVal, 0*Math.PI, japRands[1]*2*Math.PI);
+			ctx.arc(newCordX+japRands[2]*12, newCordY, sizeVal, 0*Math.PI, japRands[3]*2*Math.PI);
+			ctx.arc(newCordX, newCordY-japRands[4]*12, sizeVal, 0*Math.PI, japRands[5]*2*Math.PI);
+			ctx.arc(newCordX, newCordY+japRands[6]*12, sizeVal, 0*Math.PI, japRands[7]*2*Math.PI);
+			ctx.arc(newCordX, newCordY, sizeVal, 0*Math.PI, japRands[8]*2*Math.PI);
+			ctx.closePath();
+			ctx.fill();
+
+	}
 }
 
 function draw_preview(){
@@ -339,7 +415,6 @@ function clearCanvas() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-
 function load_image(src, x_scale, y_scale){
 	clearCanvas();
 	var img = new Image;
@@ -355,3 +430,16 @@ $( document ).ready(function() {
     old_w = canvas.width;
 		old_h = canvas.height;
 });
+
+//Change brushstyle
+document.getElementById("Normal").onclick = function(){
+	brushStyle = 'Normal';
+	document.getElementById("Normal").style.backgroundColor = "#d9d9d9";
+	document.getElementById("Japanese").style.backgroundColor = "#f9f9f9";
+};
+
+document.getElementById("Japanese").onclick = function(){
+	brushStyle = 'Japanese';
+	document.getElementById("Japanese").style.backgroundColor = "#d9d9d9";
+	document.getElementById("Normal").style.backgroundColor = "#f9f9f9";
+};

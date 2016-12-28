@@ -43,21 +43,21 @@ user_Control.userFunctions = function(data, socket, io){
 				io.sockets.in(socket.curr_room).emit('onlineUsers', {users:onlineUsers[roomIndex].userNames});
 				//send new vote stats to all clients
 				io.sockets.in(socket.curr_room).emit('voteStats', checkUsersVotes(socket));
-				break;
+			break;
 
 			case 'userChange':
 				changeUserVote(socket, io);
 				checkUsersVotes(socket);
 				//Finns nog bättre ställe att sätta den:
 				checkIfChangable(io, socket);
-				break;
+			break;
 
 			case 'userDisconnect':
 				removeFromUserList(socket, io);
 				//remove all entries from socket from MongoDB
 				mongoDB.collection('User').remove({"socketID":socket.id});
 				mongoDB.collection('UserMove').remove({"socketID":socket.id});
-				break;
+			break;
 			}
 }
 

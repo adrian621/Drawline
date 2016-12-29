@@ -15,7 +15,8 @@
 #voteContainer{text-align:center;}
 #menu{position:absolute; z-index:1;}
 #color{margin:auto; margin-top:8px;}
-#vStats{margin:auto; margin-top:100px; width:75%;}
+#voteHeader{margin-top:70px; color:white; text-align:center;}
+#vStats{margin:auto; width:75%;}
 #voteButtonID{margin:auto;}
 #downloadContainer{text-align:center; margin-top:80px;}
 #downloadBut{margin:auto;}
@@ -53,9 +54,13 @@
     top: 0;
     left: 0;
     background-color: #111; /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-x: hidden;
     padding-top: 0; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+.sidenav::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
 }
 
 /* The navigation menu links */
@@ -70,6 +75,7 @@
 .sidenav p{
   padding-left:20px;
 }
+
 
 .sidenav ul{
   padding-left:20px;
@@ -110,6 +116,46 @@
     .sidenav a {font-size: 18px;}
 }
 li{margin-bottom:10%; /* limit width */}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    display: block;
+    text-align:center;
+    margin-top: 20px;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    left:50%;
+    transform:translate(-50%,0);
+}
+
+/* Links inside the dropdown */
+.dropdown-content p {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+#Normal {background-color: #d9d9d9;}
+
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
 html{padding:0; margin-bottom:0;}
 body {
     overflow: hidden;

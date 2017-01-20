@@ -13,7 +13,7 @@ var room_Control = require('./roomControl.js');
 
 //Database:
 var mongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://jaki:123@ds141368.mlab.com:41368/heroku_b774r87n';
+var url = 'mongodb://all:123@ds141428.mlab.com:41428/heroku_v9hdms3v';
 
 //Try to connect to MongoDB Database
 mongoClient.connect(url, function(err, db) {
@@ -24,9 +24,11 @@ mongoClient.connect(url, function(err, db) {
 
 	else {
 		console.log('MongoDB succesfully connected.');
+		db.collection.remove('User', function(err, collection) {});
 		db.createCollection('User', function(err, collection) {});
 		db.collection('User').insert({'user':'ADMIN', "socketID":0});
 		console.log('COLLECTION: User, created.');
+		db.collection.remove('UserMove', function(err, collection) {});
 		db.createCollection('UserMove', function(err, collection) {});
 		db.collection('UserMove').insert({'socketID':0, 'move':[0,0]});
 		console.log('COLLECTION: UserMove, created.');

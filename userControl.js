@@ -3,7 +3,7 @@ var draw_Control = require('./drawControl');
 var roomControl = require('./roomControl');
 
 var mongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://jaki:123@ds141368.mlab.com:41368/heroku_b774r87n';
+var url = 'mongodb://all:123@ds141428.mlab.com:41428/heroku_v9hdms3v';
 var mongoDB;
 
 //Connect to MongoDB

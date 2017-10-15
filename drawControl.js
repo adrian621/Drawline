@@ -45,9 +45,6 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'coordinates':
 		  if(controlValidCordinates(data.coord_data, socket)){
-				//io.emit('ext_coordinates', [data.coord_data, data.resolution]);
-			//	io.sockets.in(socket.curr_room).emit('ext_coordinates', [data.coord_data, data.resolution]);
-
 				//mongoDB.collection('UserMove').insert({'socketID':socket.id, "move":data.coord_data, "res":data.resolution});
 				io.to(socket.curr_room).emit('ext_coordinates', {coordData: data.coord_data, resolution: data.resolution, brush: data.brush});
 
@@ -61,7 +58,6 @@ draw_Control.drawFunctions = function(data, socket, io, rtt){
 
 		case 'wantCanvas':
 			var roomCanvas = room_Control.canvasFromRoomName(socket.curr_room);
-			//socket.emit('latestCanvas', {cnv_data: canvas.toDataURL(), resolution: [canvas.width, canvas.height]});
 			socket.emit('latestCanvas', {cnv_data: roomCanvas.toDataURL(), resolution: [roomCanvas.width, roomCanvas.height]});
 			break;
 
@@ -101,7 +97,7 @@ function drawServerCanvas(data, socket){
 			  for (var i = 3; i < data.cnv_data.length; i++) {
 					drawTypeNormal(data, scaleX, scaleY, sizeVal, colorVal, roomCtx, i);
 				}
-			break;
+				break;
 
 			case "Line":
 				break;
@@ -114,22 +110,24 @@ function drawServerCanvas(data, socket){
 				}
 				break;
 		}
-
 	}
 
 	if(data.type == 'serverStart'){
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		var img = new Image;
-
-		img.onload = function(){
-			canvas.width = img.width;
-			canvas.height = img.height;
-			ctx.drawImage(img,0,0);
-		}
-
-		img.src = data.cnv_data;
-
+		drawServerStart(ctx, canvas, data);
 	}
+}
+
+drawServerStart = function(ctx, canvas, data) {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	var img = new Image;
+
+	img.onload = function(){
+		canvas.width = img.width;
+		canvas.height = img.height;
+		ctx.drawImage(img,0,0);
+	}
+
+	img.src = data.cnv_data;
 }
 
 drawTypeJapan = function(data, sizeVal, colorVal, roomCtx, i) {

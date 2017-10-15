@@ -78,8 +78,6 @@ socket.on('connect', function(){
 	//draw_preview();
 });
 
-
-
 socket.on('latestCanvas', function(data){
 	var resolution = data.resolution;
 	scaleX = canvas.width/resolution[0];
@@ -212,6 +210,10 @@ function findMove(res, e) {
 			if(brushStyle == 'Normal')
 				frst_coord_tuple = [newCordX, newCordY];
 
+			if(brushStyle == 'Line') {
+				frst_coord_tuple = [newCordX, newCordY];
+			}
+
 			coordinates.push(frst_coord_tuple);
 
 			flag = true;
@@ -231,6 +233,8 @@ function findMove(res, e) {
 	if(res == 'up' || res == 'out') {
 		//Send coordinates to server when user lets go of mouse
 	  	//* UNCOMMENT IF YOU RUN INDEX.HTML IN A NODEJS SERVER!!! *
+		if(brushStyle == 'Line')
+			coord_tuple = [newCordX, newCordY];
 
 		socket.emit('drawControl', {type: 'coordinates', brush: brushStyle, coord_data: coordinates, resolution: [canvas.width, canvas.height]} );
 
@@ -271,7 +275,6 @@ function findMove(res, e) {
 		draw(brushStyle);
 	}
 }
-
 
 function touchMove(res, e){
 	switch(res){
@@ -355,6 +358,18 @@ function draw(bStyle) {
 			//draw_preview();
 		break;
 
+		case 'Line':
+			var sizeVal = size.value;
+			var colorVal = "#"+color.value;
+
+			ctx.beginPath();
+			ctx.lineCap = "round";
+		  ctx.moveTo(prevCordX, prevCordY);
+		  ctx.lineTo(newCordX, newCordY);
+		  ctx.lineWidth = sizeVal;
+		  ctx.strokeStyle = colorVal;
+		  ctx.stroke();
+
 		case 'Japanese':
 			var sizeVal = size.value/4;
 
@@ -386,6 +401,7 @@ function draw_preview(){
   preview_ctx.strokeStyle = colorVal;
   preview_ctx.stroke();
 }
+
 function scale_canvas(e){
 	socket.emit('rot', 'rotated');
   rect = canvas.getBoundingClientRect();
@@ -402,7 +418,6 @@ function scale_canvas(e){
 	old_h = canvas.height;
 	old_dataURL = canvas.toDataURL();
 }
-
 
 function init_page(){
 	canvas.width = window.innerWidth;

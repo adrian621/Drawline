@@ -166,7 +166,6 @@ roomIsInList = function(roomName){
 	return false;
 }
 
-
 addToUserList = function(data, socket){
 	var username = checkUserNameValidity(socket.username);
 
